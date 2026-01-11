@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3 uid="uid://e85s3dhsowhe"]
+
+[ext_resource type="Script" uid="uid://p6k3degv8ng8" path="res://unit/unit_path.gd" id="1_a11t4"]
+[ext_resource type="TileSet" uid="uid://clsd5gnskuo40" path="res://unit/unit_path.tres" id="1_b4os4"]
+[ext_resource type="Resource" uid="uid://bgc8oa3rwbxwf" path="res://utils/Grid.tres" id="3_i6e8v"]
+
+[node name="UnitPath" type="TileMapLayer"]
+self_modulate = Color(0, 0.85105014, 0.50956357, 0.95000005)
+tile_set = ExtResource("1_b4os4")
+script = ExtResource("1_a11t4")
+grid = ExtResource("3_i6e8v")

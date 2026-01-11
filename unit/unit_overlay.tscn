@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://d373hbs2371ef"]
+
+[ext_resource type="TileSet" uid="uid://clsd5gnskuo40" path="res://unit/unit_path.tres" id="1_d0cj4"]
+[ext_resource type="Script" uid="uid://ywx3y72unc3x" path="res://unit/unit_overlay.gd" id="2_dcgok"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d0cj4"]
+blend_mode = 2
+
+[node name="Unit_overlay" type="TileMapLayer"]
+self_modulate = Color(1, 1, 1, 0.287)
+material = SubResource("CanvasItemMaterial_d0cj4")
+tile_set = ExtResource("1_d0cj4")
+script = ExtResource("2_dcgok")

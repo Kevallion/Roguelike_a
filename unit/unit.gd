@@ -1,0 +1,87 @@
+##Une unité sait comment se déplacer
+class_name Unit extends Path2D
+
+##signal pour savoir quand l'entité à terminé son déplacement sur la grille
+signal walk_finished
+@onready var path_follow_2d: PathFollow2D = %PathFollow2D
+@onready var unit_visual: Unit_visual = %UnitVisual
+
+
+	
+@export var grid: Grid = preload("res://Utils/Grid.tres")
+
+#Stat qui sera plus tard dans une ressource
+##déplacement maximum de l'entité sur le plateau
+@export var move_range := 3
+@export var move_speed := 200
+var max_health : float = 10.0 
+var curr_health := 10.0
+var critical_health := 0.30 * curr_health
+
+func set_max_health(new_value: float) -> void:
+	max_health = new_value
+	
+
+##proprité qui reprensente la coordoonée de l'entité sur notre grille
+var cell := Vector2.ZERO  : set = set_cell
+func set_cell(new_value) -> void:
+	cell = grid.clamp(new_value)
+	
+##Savoir si notre entité est séléctionné
+var is_selected := false : set = set_is_selected
+
+func set_is_selected(new_value) -> void:
+	is_selected = new_value
+
+
+var is_walking := false : set = set_is_walking
+func set_is_walking(new_value) -> void:
+	is_walking = new_value 
+	#on active la process pour faire le déplacement
+	set_process(is_walking)
+
+func _ready() -> void:
+	
+	if Engine.is_editor_hint():
+		return
+	#on récupère la coordonnée d'ou est sensé être placé notre entité puis on le replace bien après
+	cell = grid.calculate_grid_coordinate(position)
+	position = grid.calculate_map_position(cell)
+	
+	
+	curve = Curve2D.new()
+	
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+		
+	path_follow_2d.progress += move_speed * delta
+	
+	if path_follow_2d.progress_ratio >= 1.0:
+		is_walking = false
+		position = grid.calculate_map_position(cell)
+		path_follow_2d.progress_ratio = 0.0
+		curve.clear_points()
+		walk_finished.emit()
+
+##fonction qui prend en paramètre le chemin à suivre par l'entité.
+func walk_along(path: PackedVector2Array) -> void:
+	if path.is_empty():
+		return
+	curve.clear_points()
+	curve.add_point(path_follow_2d.position)
+	for index in range(1, path.size()):
+		var point = path[index]
+		##ici on fait to_local parce que path contient des coordonné monde. Et curve est enfant de notre Node
+		var local_pos = to_local(grid.calculate_map_position(point))
+		curve.add_point(local_pos)
+	
+	#on met à jour directement la destination que doit atteindre l'entité
+	cell = path[-1]
+	
+	#on met que notre entité marche
+	is_walking = true
+
+#s'il peu agir retourne true
+func can_act() -> bool:
+	return true
