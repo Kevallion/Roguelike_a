@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cp4jrwqcmtgr7"]
+[gd_scene load_steps=6 format=3 uid="uid://cp4jrwqcmtgr7"]
 
 [ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://unit/unit.tscn" id="1_bfvk7"]
 [ext_resource type="Texture2D" uid="uid://cvq4qq6i5o42a" path="res://asset/Heroes/knight.png" id="2_04jtt"]
 [ext_resource type="Script" uid="uid://dcno2cigla0l2" path="res://unit/Player/player.gd" id="2_aph0k"]
+[ext_resource type="Resource" uid="uid://clcnhf6a82m35" path="res://unit/Player/knight_stats.tres" id="5_j1nbm"]
+[ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/Player/stats_components.gd" id="5_ur2e0"]
 
 [node name="Player" instance=ExtResource("1_bfvk7")]
 script = ExtResource("2_aph0k")
@@ -10,3 +12,20 @@ script = ExtResource("2_aph0k")
 [node name="Sprite2D" type="Sprite2D" parent="PathFollow2D/UnitVisual" index="0"]
 texture = ExtResource("2_04jtt")
 offset = Vector2(0, -8)
+
+[node name="Camera2D" type="Camera2D" parent="PathFollow2D/UnitVisual" index="1"]
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.3
+drag_top_margin = 0.3
+drag_right_margin = 0.3
+drag_bottom_margin = 0.3
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="StatsComponent" type="Node" parent="." index="1"]
+script = ExtResource("5_ur2e0")
+_stats = ExtResource("5_j1nbm")

@@ -10,7 +10,8 @@ func _init(_unit: Unit, _path: PackedVector2Array) -> void:
 		
 func execute() -> void:
 	unit.walk_along(path)
-	unit.walk_finished.connect(_on_finished,CONNECT_ONE_SHOT)
-
+	await unit.walk_finished
+	_on_finished()
+	
 func _on_finished() -> void:
 	finished.emit()

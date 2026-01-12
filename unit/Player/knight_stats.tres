@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Unit_Stats" load_steps=2 format=3 uid="uid://clcnhf6a82m35"]
+
+[ext_resource type="Script" uid="uid://dtcbnvw07ca12" path="res://unit/unit_stats.gd" id="1_7q5vx"]
+
+[resource]
+script = ExtResource("1_7q5vx")
+entity_name = "knight"
+point_health = 4
+point_defense = 4
+point_attack = 3
+point_move_range = 1
+point_stamina = 3
+metadata/_custom_type_script = "uid://dtcbnvw07ca12"

@@ -7,21 +7,15 @@ signal walk_finished
 @onready var unit_visual: Unit_visual = %UnitVisual
 
 
-	
+
 @export var grid: Grid = preload("res://Utils/Grid.tres")
+##réfence à l'objet responsable des stats
+@onready var stat_component : StatsComponent = $"StatsComponent"
 
-#Stat qui sera plus tard dans une ressource
-##déplacement maximum de l'entité sur le plateau
-@export var move_range := 3
 @export var move_speed := 200
-var max_health : float = 10.0 
-var curr_health := 10.0
-var critical_health := 0.30 * curr_health
-
-func set_max_health(new_value: float) -> void:
-	max_health = new_value
+var move_range: int : 
+	get : return stat_component.get_move_range()
 	
-
 ##proprité qui reprensente la coordoonée de l'entité sur notre grille
 var cell := Vector2.ZERO  : set = set_cell
 func set_cell(new_value) -> void:
@@ -59,7 +53,9 @@ func _process(delta: float) -> void:
 	
 	if path_follow_2d.progress_ratio >= 1.0:
 		is_walking = false
-		position = grid.calculate_map_position(cell)
+		var fina_cell := grid.calculate_grid_coordinate(path_follow_2d.global_position)
+		position = grid.calculate_map_position(fina_cell)
+		cell = grid.calculate_grid_coordinate(position)
 		path_follow_2d.progress_ratio = 0.0
 		curve.clear_points()
 		walk_finished.emit()
@@ -76,12 +72,14 @@ func walk_along(path: PackedVector2Array) -> void:
 		var local_pos = to_local(grid.calculate_map_position(point))
 		curve.add_point(local_pos)
 	
-	#on met à jour directement la destination que doit atteindre l'entité
+
 	cell = path[-1]
-	
 	#on met que notre entité marche
 	is_walking = true
 
 #s'il peu agir retourne true
 func can_act() -> bool:
 	return true
+
+func die() -> void:
+	pass

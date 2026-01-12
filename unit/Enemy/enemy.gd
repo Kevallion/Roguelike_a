@@ -4,6 +4,7 @@ class_name Enemy extends Unit
 signal action_finished
 signal move_requested(unit: Unit, target_cell: Vector2)
 
+
 var _player: Player
 @export var view_range := 160.0
 
@@ -28,9 +29,12 @@ func can_attack_player() -> bool:
 	var distance := difference.x + difference.y
 	return distance <= 1
 
-func is_heath_critical() -> bool:
-	return curr_health < critical_health
 
+func is_heath_critical() -> bool:
+	if not stat_component:
+		return false
+	return stat_component.is_heath_critical()
+	
 func patrol() -> void:
 	print("je patrouille")
 	await get_tree().create_timer(0.1).timeout
@@ -56,3 +60,6 @@ func move_toward_player():
 	var target_cell = grid.get_neareast_cells_around_a_target(self.cell, _player.cell)
 	move_requested.emit(self, target_cell)
 	await action_finished
+
+func die() -> void:
+	queue_free()

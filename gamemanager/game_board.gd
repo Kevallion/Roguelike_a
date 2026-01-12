@@ -50,6 +50,7 @@ func reinitialize() -> void:
 			var enemy  = unit as Enemy
 			enemy._player = _player
 			enemy.move_requested.connect(_try_to_move_enemy)
+			enemy.stat_component.health_depleted.connect(update_units)
 	#on fait connaitre au turn_manager les unités qui doivent jouer		
 	turn_manager.initialize(_units)
 	
@@ -64,18 +65,25 @@ func move_unit(unit: Unit, path: PackedVector2Array) -> void:
 	if path.is_empty():
 		return
 	
-	#si tout est bon on met à jour la position de l'unité dans le dictionnaire
+	var destination_cell = path[-1]
+	
+	#on libère la position sur la gameboard
 	_units.erase(unit.cell)
+	
+	#on met à jour la céllule d'arrivé de l'unité
+	unit.cell = destination_cell
+	
+	#on réserve la destination dans le dico
+	_units[destination_cell] = unit
 	
 	#je crée une command de mouvement pour l'appeler après
 	var command := MoveCommand.new(unit,path)
 	#on attend que le chemin soit terminé
 	await _execute_command(command)
 	
-	#une fois le mouvement terminé on met à jour la position dans le dico
-	_units[unit.cell] = unit
+
 	
-##ça c'est la logique pour faire le déplacement 
+##ça c'est la logique pour faire le déplacement du player
 func _try_move_player(new_cell: Vector2) -> void:
 	var walkable_cells = level.get_walkable_cells(_player,_units)
 	
@@ -88,20 +96,30 @@ func _try_move_player(new_cell: Vector2) -> void:
 	await move_unit(_player, _path)
 	turn_manager.on_player_action_done()
 
+##function qui essaie de faire bouger l'unité ennemy
 func _try_to_move_enemy(_unit_enemy: Unit, target_cell: Vector2) -> void:
-
-	print("enemy try to move")
 	var _path = get_path_to_player(_unit_enemy, target_cell)
-	print("path of the enemy", _path)
+
 	if not _path.is_empty():
 		await move_unit(_unit_enemy,_path)
-	else:
-		await get_tree().create_timer(0.1).timeout # Une micro pause
-		print("l'ennemi peu pas bouger il passe son tour")
+	
+	await get_tree().process_frame # Une micro pause
 		
 	_unit_enemy.action_finished.emit()
-	
-	
+
+##function qui essaie d'attaquer l'ennemie	
+func _try_attack_player(target_enemy: Unit) -> void:
+	var distance := grid.get_manathan_distance(_player.cell, target_enemy.cell)	
+	var attack_range := 1
+	if distance <= attack_range:
+		var command = AttackCommand.new(_player,target_enemy)
+		##ça se bloque ici vu que rien n'arrive
+		await _execute_command(command)
+		print("tell action done")
+		turn_manager.on_player_action_done()
+	else:
+		_try_move_player(target_enemy.cell)
+		
 ##fonction pour retourner un chemin pour l'ennemis
 func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
 	var enemy_walkable_cells = level.get_walkable_cells(unit, _units)
@@ -110,19 +128,28 @@ func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
 		target_cell = grid.get_nearest_walkable_cell(target_cell, enemy_walkable_cells)
 		
 	if not level.is_cell_walkable(target_cell) or target_cell == unit.cell:
-		print("peu pas y aller soit pas marchable ou y'a une unité")
+		print("peu pas y aller soit pas marchable meme que l'unité une unité")
 		return PackedVector2Array()
 		
 	unit_path.initalize(enemy_walkable_cells)
 	return unit_path.build_path(unit.cell,target_cell,unit.move_range)
 	
 
+func update_units(unit: Unit) -> void:
+	_units.erase(unit.cell)
+	turn_manager.update_enemies(unit)
+	unit.die()
 
 ##signal connecté quand le cursor clic
 func _on_cursor_accept_pressed(cell: Vector2) -> void:
 	if not turn_manager.is_player_turn():
 		return
-	_try_move_player(cell)
+		
+	var unit_at_cell = _units.get(cell)
+	if unit_at_cell is Enemy:
+		_try_attack_player(unit_at_cell)
+	else:
+		_try_move_player(cell)
 
 #signal connecté quand le cursor bouge sur le plateau
 func _on_cursor_moved(new_cell: Vector2) -> void:

@@ -31,15 +31,12 @@ move_speed = 100
 
 [node name="Enemy" parent="GameBoard" instance=ExtResource("6_272bh")]
 position = Vector2(208, 64)
-view_range = 160.0
 
 [node name="Enemy3" parent="GameBoard" instance=ExtResource("6_272bh")]
 position = Vector2(312, 24)
-view_range = 160.0
 
 [node name="Enemy2" parent="GameBoard" instance=ExtResource("6_272bh")]
 position = Vector2(272, 144)
-view_range = 160.0
 
 [node name="TurnManager" type="Node" parent="GameBoard"]
 unique_name_in_owner = true

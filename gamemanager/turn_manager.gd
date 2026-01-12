@@ -22,6 +22,9 @@ func initialize(_units: Dictionary) -> void:
 		elif unit is Player:
 			_player = unit
 
+func update_enemies(_unit: Enemy) -> void:
+	_enemies.erase(_unit)
+	
 ##fonction pour savoir si c'est le tour du joueur
 func is_player_turn() -> bool:
 	return current_state == TurnState.PLAYER
