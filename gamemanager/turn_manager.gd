@@ -38,6 +38,9 @@ func _run_enemy_turn() -> void:
 	transition_to_state(TurnState.ENEMY)
 	
 	for enemy in _enemies:
+		if enemy.is_sleeping:
+			continue
+		
 		await enemy.take_turn()
 
 func transition_to_state(new_state: TurnState) -> void:

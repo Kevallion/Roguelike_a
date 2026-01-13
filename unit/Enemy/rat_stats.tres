@@ -5,4 +5,6 @@
 [resource]
 script = ExtResource("1_hhnh2")
 entity_name = "rat"
+point_health = 2
+point_attack = 2
 metadata/_custom_type_script = "uid://dtcbnvw07ca12"

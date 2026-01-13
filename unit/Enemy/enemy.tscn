@@ -10,6 +10,9 @@
 script = ExtResource("2_ois23")
 view_range = 90.0
 
+[node name="UnitVisual" parent="PathFollow2D" index="0" node_paths=PackedStringArray("_visual")]
+_visual = NodePath("Sprite2D")
+
 [node name="Sprite2D" type="Sprite2D" parent="PathFollow2D/UnitVisual" index="0"]
 texture = ExtResource("3_ois23")
 offset = Vector2(0, -3.975)
@@ -18,3 +21,9 @@ offset = Vector2(0, -3.975)
 script = ExtResource("4_yt3h8")
 _stats = ExtResource("5_2xr4q")
 metadata/_custom_type_script = "uid://bbw78k48274p5"
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." index="2"]
+show_rect = false
+
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

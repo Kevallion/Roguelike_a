@@ -3,9 +3,11 @@ class_name Enemy extends Unit
 
 signal action_finished
 signal move_requested(unit: Unit, target_cell: Vector2)
-
+signal attack_requested(unit: Unit)
+signal flee_requested(unit: Unit)
 
 var _player: Player
+var is_sleeping := true 
 @export var view_range := 160.0
 
 ##fonction à remplir assap
@@ -41,14 +43,13 @@ func patrol() -> void:
 	action_finished.emit()
 
 func flee() -> void:
-	print("prend la fuite")
-	await get_tree().create_timer(0.1).timeout
-	action_finished.emit()
+	flee_requested.emit(self)
+	await action_finished
+
 	
 func attack_player() -> void:
-	print("j'attaque le joueur")
-	await get_tree().create_timer(0.1).timeout
-	action_finished.emit()
+	attack_requested.emit(self)
+	await action_finished
 	
 func wait() -> void:
 	print("j'attend un peu")
@@ -56,10 +57,19 @@ func wait() -> void:
 	action_finished.emit()
 	
 func move_toward_player():
-	print("Enemy is moving toward player")
 	var target_cell = grid.get_neareast_cells_around_a_target(self.cell, _player.cell)
 	move_requested.emit(self, target_cell)
 	await action_finished
 
 func die() -> void:
 	queue_free()
+	
+
+
+
+func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
+	is_sleeping = false
+
+
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	is_sleeping = true

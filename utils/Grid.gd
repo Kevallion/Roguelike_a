@@ -62,6 +62,18 @@ func get_nearest_walkable_cell(new_cell: Vector2, walkable_cells: Array) -> Vect
 			
 	return nearest_cell
 
+func get_farthest_walkable_cell(new_cell: Vector2, walkable_cells: Array) -> Vector2:
+	var farthest_cell: Vector2
+	var max_distance = 0
+	
+	for cell in walkable_cells:
+		var distance = get_manathan_distance(new_cell,cell)
+		
+		if distance > max_distance:
+			max_distance = distance
+			farthest_cell = cell
+	return farthest_cell
+	
 ##Cette fonction permet de calculer la célule la plus proche autour autour d'un point
 ##par rapport à la coordonné de l'entité concerné
 func get_neareast_cells_around_a_target(start_cell: Vector2, target_cell: Vector2) -> Vector2:
