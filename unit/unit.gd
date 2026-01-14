@@ -56,8 +56,9 @@ func walk_along(path: PackedVector2Array) -> void:
 	# On parcourt chaque point du chemin (sauf le premier qui est notre position actuelle)
 	for i in range(1,path.size()):
 		var target_cell := path[i]
+		var cell_before := path[i-1]
 		var target_wold_pos := grid.calculate_map_position(target_cell)
-		var target_direction := cell.direction_to(target_cell)
+		var target_direction := cell_before.direction_to(target_cell)
 		print(target_direction)
 		# TEMPS DU SAUT (plus c'est petit, plus il va vite)
 		var step_duration := 0.20
