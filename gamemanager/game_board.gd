@@ -116,9 +116,7 @@ func _try_attack_player(target_enemy: Unit) -> void:
 	var attack_range := 1
 	if distance <= attack_range:
 		var command = AttackCommand.new(_player,target_enemy)
-		##ça se bloque ici vu que rien n'arrive
 		await _execute_command(command)
-		print("tell action done")
 		turn_manager.on_player_action_done()
 	else:
 		_try_move_player(target_enemy.cell)

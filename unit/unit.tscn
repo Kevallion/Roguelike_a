@@ -1,17 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://bumk3bob8i4b"]
+[gd_scene load_steps=4 format=3 uid="uid://bumk3bob8i4b"]
 
 [ext_resource type="Script" uid="uid://d0wjimi22nxqv" path="res://unit/unit.gd" id="1_tuymw"]
+[ext_resource type="Resource" uid="uid://bgc8oa3rwbxwf" path="res://utils/Grid.tres" id="2_hs7ws"]
 [ext_resource type="Script" uid="uid://luj2f4ndgjme" path="res://unit/unit_visual.gd" id="2_ytiie"]
 
 [node name="Unit" type="Path2D"]
 script = ExtResource("1_tuymw")
+grid = ExtResource("2_hs7ws")
 move_speed = 100
 
-[node name="PathFollow2D" type="PathFollow2D" parent="."]
-unique_name_in_owner = true
-rotates = false
-loop = false
-
-[node name="UnitVisual" type="Node2D" parent="PathFollow2D"]
+[node name="UnitVisual" type="Node2D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_ytiie")

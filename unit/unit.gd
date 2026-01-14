@@ -4,8 +4,8 @@ class_name Unit extends Path2D
 
 ##signal pour savoir quand l'entité à terminé son déplacement sur la grille
 signal walk_finished
-@onready var path_follow_2d: PathFollow2D = %PathFollow2D
-@onready var unit_visual: Unit_visual = %UnitVisual
+
+
 
 ##variable pour savoir s'il est en train de faire une action
 var is_onAction = false
@@ -14,6 +14,7 @@ var is_onAction = false
 @export var grid: Grid = preload("res://Utils/Grid.tres")
 ##réfence à l'objet responsable des stats
 @onready var stat_component : StatsComponent = $"StatsComponent"
+@onready var unit_visual: Unit_visual = %UnitVisual
 
 @export var move_speed := 200
 var move_range: int : 
@@ -40,46 +41,45 @@ func _ready() -> void:
 	cell = grid.calculate_grid_coordinate(position)
 	position = grid.calculate_map_position(cell)
 	
-	
-	curve = Curve2D.new()
+
 	
 func _process(delta: float) -> void:
-	if Engine.is_editor_hint():
-		return
-		
-	path_follow_2d.progress += move_speed * delta
-	
-	if path_follow_2d.progress_ratio >= 1.0 or ( curve.point_count == 1 and is_walking == true):
-		print("fin du chemin")
-		is_walking = false
-		var fina_cell := grid.calculate_grid_coordinate(path_follow_2d.global_position)
-		position = grid.calculate_map_position(fina_cell)
-		cell = grid.calculate_grid_coordinate(position)
-		path_follow_2d.progress_ratio = 0.0
-		curve.clear_points()
-		is_onAction = false
-		walk_finished.emit()
+	pass
 
 ##fonction qui prend en paramètre le chemin à suivre par l'entité.
-func walk_along(path: PackedVector2Array) -> float:
-	var time := 0.0
+func walk_along(path: PackedVector2Array) -> void:
 	if path.is_empty():
-		return time
-	print("le path", path)
-	curve.clear_points()
-	curve.add_point(path_follow_2d.position)
-	for index in range(1, path.size()):
-		var point = path[index]
-		##ici on fait to_local parce que path contient des coordonné monde. Et curve est enfant de notre Node
-		var local_pos = to_local(grid.calculate_map_position(point))
-		curve.add_point(local_pos)
-	print("temp du chemin ", time)
-	print(curve.point_count)
-	#cell = path[-1]
-	#on met que notre entité marche
+		return 
+	
 	is_walking = true
 	
-	return time
+	# On parcourt chaque point du chemin (sauf le premier qui est notre position actuelle)
+	for i in range(1,path.size()):
+		var target_cell := path[i]
+		var target_wold_pos := grid.calculate_map_position(target_cell)
+		var target_direction := cell.direction_to(target_cell)
+		print(target_direction)
+		# TEMPS DU SAUT (plus c'est petit, plus il va vite)
+		var step_duration := 0.20
+		
+		# 1. On lance l'animation de saut (Le visuel gère le Y)
+		if unit_visual != null:
+			unit_visual.face_direction(target_direction)
+			unit_visual.play_jump_animation(step_duration)
+			
+			
+		# 2. On déplace l'unité vers la case (L'unité gère le X et Y global)
+		var tween := create_tween()
+		tween.tween_property(self,"global_position",target_wold_pos,step_duration)
+		# 3. On attend que ce pas soit fini avant de passer au suivant
+		await tween.finished
+		
+		# Mise à jour logique de la cellule
+		cell = target_cell
+	
+	is_walking = false
+	walk_finished.emit()
+
 #s'il peu agir retourne true
 func can_act() -> bool:
 	return is_onAction
