@@ -11,14 +11,21 @@ config_version=5
 [application]
 
 config/name="roguelike_a"
-run/main_scene="uid://b64k8v4cxdtth"
+run/main_scene="uid://bo4liidfra3e8"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RunData="*res://autoload/runData.gd"
+Gamestate="*res://autoload/gamestate.gd"
+SignalBus="*res://autoload/signalBus.gd"
+SceneChanger="*res://autoload/scene_changer.tscn"
+Globals="*res://autoload/globals.gd"
 
 [display]
 
 window/stretch/mode="canvas_items"
-window/stretch/scale=3.0
 
 [input]
 

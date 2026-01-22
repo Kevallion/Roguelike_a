@@ -1,5 +1,5 @@
 ##Cette objet va se charger de connaitre le terrain et pouvoir dire s'il est possible de se déplacer
-class_name Level extends Node2D
+class_name EnvironmentLevel extends Node2D
 
 #les direction quon va parcourir
 const DIRECTIONS = [Vector2.LEFT,Vector2.UP,Vector2.RIGHT,Vector2.DOWN]

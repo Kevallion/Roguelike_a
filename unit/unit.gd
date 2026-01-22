@@ -1,6 +1,6 @@
 ##Une unité sait comment se déplacer*
 ##Sait tous ce qu'on player ou enemis peu faire
-class_name Unit extends Path2D
+class_name Unit extends Node2D
 
 ##signal pour savoir quand l'entité à terminé son déplacement sur la grille
 signal walk_finished
@@ -15,6 +15,7 @@ var is_onAction = false
 ##réfence à l'objet responsable des stats
 @onready var stat_component : StatsComponent = $"StatsComponent"
 @onready var unit_visual: Unit_visual = %UnitVisual
+@export var skills : Array[SkillsData] = []
 
 @export var move_speed := 200
 var move_range: int : 
@@ -37,14 +38,11 @@ func _ready() -> void:
 	
 	if Engine.is_editor_hint():
 		return
+
 	#on récupère la coordonnée d'ou est sensé être placé notre entité puis on le replace bien après
 	cell = grid.calculate_grid_coordinate(position)
 	position = grid.calculate_map_position(cell)
 	
-
-	
-func _process(delta: float) -> void:
-	pass
 
 ##fonction qui prend en paramètre le chemin à suivre par l'entité.
 func walk_along(path: PackedVector2Array) -> void:
@@ -59,7 +57,7 @@ func walk_along(path: PackedVector2Array) -> void:
 		var cell_before := path[i-1]
 		var target_wold_pos := grid.calculate_map_position(target_cell)
 		var target_direction := cell_before.direction_to(target_cell)
-		print(target_direction)
+		
 		# TEMPS DU SAUT (plus c'est petit, plus il va vite)
 		var step_duration := 0.20
 		
@@ -87,3 +85,26 @@ func can_act() -> bool:
 
 func die() -> void:
 	pass
+
+## fonction qui renvoie true ou false si l'unité peu utiliser un skill
+func can_afford_skill(skill: SkillsData) -> bool:
+	if stat_component == null:
+		return false
+		
+	if stat_component._stats.move_range < skill.move_range_cost:
+		return false
+	if stat_component._stats.mana < skill.mana_cost:
+		return false
+	if stat_component._stats.stamina < skill.stamina_cost:
+		return false
+		
+	return true
+
+func pay_cost_skill(skill: SkillsData) -> void:
+	if stat_component == null:
+		return
+	
+	stat_component._stats.move_range -= skill.move_range_cost
+	stat_component._stats.mana -= skill.mana_cost
+	stat_component._stats.stamina -= skill.stamina_cost
+	

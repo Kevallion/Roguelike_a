@@ -24,7 +24,10 @@ func take_turn() -> void:
 		
 
 func is_player_visible() -> bool:
-	return _player.global_position.distance_to(global_position) < view_range
+	if is_instance_valid(Player):
+		return _player.global_position.distance_to(global_position) < view_range
+	else:
+		return false
 
 func can_attack_player() -> bool:
 	var difference := (_player.cell - self.cell).abs()
@@ -38,7 +41,6 @@ func is_heath_critical() -> bool:
 	return stat_component.is_heath_critical()
 	
 func patrol() -> void:
-	print("je patrouille")
 	await get_tree().create_timer(0.1).timeout
 	action_finished.emit()
 

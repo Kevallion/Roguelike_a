@@ -46,12 +46,14 @@ func is_heath_critical() -> bool:
 	var critical_ratio := 0.3
 	return ratio <= critical_ratio
 
-func get_power_attack() -> int:
-	return _stats.attack
+func get_power_attack(bonus_damage: int = 0) -> int:
+	return _stats.attack + bonus_damage
 
 func take_damage(amount: int) -> void:
 	var final_damage : int = max(1,amount - _stats.defense)
 	print(_stats.entity_name, " has lost ", final_damage, "PV")
-	current_health -= final_damage 
+	self.current_health -= final_damage 
 	print(_stats.entity_name, " has now ", current_health, "PV")
 	
+func take_heal(amount: int) -> void:
+	self.current_health += amount

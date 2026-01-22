@@ -6,6 +6,7 @@ var _enemies: Array[Enemy] = []
 
 signal player_turned
 signal player_turn_finished
+signal player_died
 
 enum TurnState  {PLAYER, ENEMY, BUSY}
 var current_state = TurnState.PLAYER
@@ -25,6 +26,9 @@ func initialize(_units: Dictionary) -> void:
 func update_enemies(_unit: Enemy) -> void:
 	_enemies.erase(_unit)
 	
+func update_player() -> void:
+	_player = null 
+	
 ##fonction pour savoir si c'est le tour du joueur
 func is_player_turn() -> bool:
 	return current_state == TurnState.PLAYER
@@ -32,7 +36,10 @@ func is_player_turn() -> bool:
 func on_player_action_done():
 	transition_to_state(TurnState.BUSY)
 	await _run_enemy_turn()
-	transition_to_state(TurnState.PLAYER)
+	if is_instance_valid(_player):
+		transition_to_state(TurnState.PLAYER)
+	else:
+		Globals.state.change_state(Gamestate.GAME_STATE.GAMEOVER)
 
 func _run_enemy_turn() -> void:
 	transition_to_state(TurnState.ENEMY)

@@ -1,13 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://cp4jrwqcmtgr7"]
+[gd_scene load_steps=10 format=3 uid="uid://cp4jrwqcmtgr7"]
 
 [ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://unit/unit.tscn" id="1_bfvk7"]
 [ext_resource type="Texture2D" uid="uid://cvq4qq6i5o42a" path="res://asset/Heroes/knight.png" id="2_04jtt"]
 [ext_resource type="Script" uid="uid://dcno2cigla0l2" path="res://unit/Player/player.gd" id="2_aph0k"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="3_8fa5x"]
+[ext_resource type="Resource" uid="uid://ntast6edt2gh" path="res://unit/Player/Knight/basic_attack.tres" id="4_dagme"]
 [ext_resource type="Resource" uid="uid://clcnhf6a82m35" path="res://unit/Player/knight_stats.tres" id="5_j1nbm"]
-[ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/Player/stats_components.gd" id="5_ur2e0"]
+[ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/stats_components.gd" id="5_ur2e0"]
+[ext_resource type="Resource" uid="uid://bk7obnulfcvk6" path="res://unit/Player/Knight/estocade.tres" id="5_vo2wx"]
+[ext_resource type="Resource" uid="uid://ni2yw6xq71km" path="res://unit/Player/Knight/health.tres" id="6_xs7vv"]
 
 [node name="Player" instance=ExtResource("1_bfvk7")]
 script = ExtResource("2_aph0k")
+skills = Array[ExtResource("3_8fa5x")]([ExtResource("4_dagme"), ExtResource("5_vo2wx"), ExtResource("6_xs7vv")])
 
 [node name="UnitVisual" parent="." index="0" node_paths=PackedStringArray("_visual")]
 _visual = NodePath("Sprite2D")

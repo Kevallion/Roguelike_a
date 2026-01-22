@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://hhfissgdpxtc"]
+
+[ext_resource type="Script" uid="uid://cxtu8pnsi0k5t" path="res://UI/game_over.gd" id="1_jawqf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5ua2x"]
+
+[node name="GameOver" type="Node2D"]
+script = ExtResource("1_jawqf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Background" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.051970966, 0.05197096, 0.05197095, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -539.0
+offset_top = -278.0
+offset_right = 539.0
+offset_bottom = 278.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+text = "SILENCE... THE CASTLE IS WATCHING"
+label_settings = SubResource("LabelSettings_5ua2x")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "PRESS ENTER TO RESTER"
+horizontal_alignment = 1
+vertical_alignment = 1

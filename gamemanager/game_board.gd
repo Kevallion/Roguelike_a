@@ -8,13 +8,12 @@ class_name GameBoard extends Node2D
 
 #on connect la grille
 @export var grid: Grid = preload("res://Utils/Grid.tres")
-
 #tilemap qui va me servir à afficher du debug visuel pour le joueur
 @onready var unit_overlay: Unit_Overlay = %Unit_overlay
 #objet qui permet d'avoir le chemin de l'unité
 @onready var unit_path: Unit_Path = %UnitPath
 #objet qui connait le niveau et les déplacement possible
-@onready var level: Level = %Level
+@onready var environment_level: EnvironmentLevel = %EnvironmentLevel
 #objet qui gère les tours
 @onready var turn_manager: TurnManager = %TurnManager
 
@@ -26,6 +25,7 @@ var _walkable_cells := []
 
 ##réference pour du joueur
 var _player : Player
+var selected_skill : SkillsData = null
 
 func _ready() -> void:
 	reinitialize()
@@ -41,6 +41,7 @@ func reinitialize() -> void:
 		if not unit:
 			continue
 		_units[unit.cell] = unit 
+		unit.stat_component.health_depleted.connect(update_units)
 		
 		if unit is Player:
 			_player = unit
@@ -52,7 +53,7 @@ func reinitialize() -> void:
 			enemy.move_requested.connect(_try_to_move_enemy)
 			enemy.attack_requested.connect(_try_attack_ennemy)
 			enemy.flee_requested.connect(_try_to_flee_enemy)
-			enemy.stat_component.health_depleted.connect(update_units)
+			
 			
 	#on fait connaitre au turn_manager les unités qui doivent jouer		
 	turn_manager.initialize(_units)
@@ -88,7 +89,7 @@ func move_unit(unit: Unit, path: PackedVector2Array) -> void:
 	
 ##ça c'est la logique pour faire le déplacement du player
 func _try_move_player(new_cell: Vector2) -> void:
-	var walkable_cells = level.get_walkable_cells(_player,_units)
+	var walkable_cells = environment_level.get_walkable_cells(_player,_units)
 	
 	#si la celule qu'on veut n'est pas dedans alors on demande la célule la plus proche
 	if not new_cell in _walkable_cells:
@@ -122,7 +123,7 @@ func _try_attack_player(target_enemy: Unit) -> void:
 		_try_move_player(target_enemy.cell)
 
 func _try_to_flee_enemy(unit: Unit) -> void:
-	var enemy_walkable_cells = level.get_walkable_cells(unit, _units)
+	var enemy_walkable_cells = environment_level.get_walkable_cells(unit, _units)
 	var farthest_cells = grid.get_farthest_walkable_cell(unit.cell, enemy_walkable_cells)
 	unit_path.initalize(enemy_walkable_cells)
 	
@@ -147,14 +148,44 @@ func _try_attack_ennemy(unit: Unit) -> void:
 	else:
 		_try_to_move_enemy(unit, _player.cell)
 		
+
+##fonction qui va essayer de lancer le sort du joueur
+func _try_cast_skill_player(target_cell: Vector2) -> void:
+	
+	#calculer la distance pour ensuite vérifier la porté
+	var distance = grid.get_manathan_distance(_player.cell,target_cell)
+	
+	#s'il est à porté il pourra attaquer
+	if distance < selected_skill.min_range or distance > selected_skill.max_range:
+		return
+	
+	#on vérifie s'il peu se payer le skill d'abord
+	if not _player.can_afford_skill(selected_skill):
+		return 
+	
+	#s'il peu allor il paie
+	_player.pay_cost_skill(selected_skill)
+	
+	match selected_skill.type:
+		SkillsData.Skill_type.DAMAGE:
+			var command = AttackCommand.new(_player,_units.get(target_cell), selected_skill)
+			await _execute_command(command)
+			turn_manager.on_player_action_done()
+		SkillsData.Skill_type.HEAL:
+			var command = HealCommand.new(_player,_units.get(target_cell),selected_skill)
+			await _execute_command(command)
+			turn_manager.on_player_action_done()
+		SkillsData.Skill_type.BUFF:
+			pass
+		
 ##fonction pour retourner un chemin pour l'ennemis
 func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
-	var enemy_walkable_cells = level.get_walkable_cells(unit, _units)
+	var enemy_walkable_cells = environment_level.get_walkable_cells(unit, _units)
 	
 	if target_cell not in enemy_walkable_cells:
 		target_cell = grid.get_nearest_walkable_cell(target_cell, enemy_walkable_cells)
 		
-	if not level.is_cell_walkable(target_cell) or target_cell == unit.cell:
+	if not environment_level.is_cell_walkable(target_cell) or target_cell == unit.cell:
 		print("peu pas y aller soit pas marchable meme que l'unité une unité")
 		return PackedVector2Array()
 		
@@ -164,7 +195,11 @@ func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
 
 func update_units(unit: Unit) -> void:
 	_units.erase(unit.cell)
-	turn_manager.update_enemies(unit)
+	if unit is Player:
+		turn_manager.update_player()
+	else:
+		turn_manager.update_enemies(unit)
+
 	unit.die()
 
 ##signal connecté quand le cursor clic
@@ -173,10 +208,13 @@ func _on_cursor_accept_pressed(cell: Vector2) -> void:
 		return
 	
 	var unit_at_cell = _units.get(cell)
-	if unit_at_cell is Enemy:
-		_try_attack_player(unit_at_cell)
-	elif not _units.has(cell):
-		_try_move_player(cell)
+	if selected_skill:
+		_try_cast_skill_player(cell)
+	else:
+		if unit_at_cell is Enemy:
+			_try_attack_player(unit_at_cell)
+		elif not _units.has(cell):
+			_try_move_player(cell)
 
 #signal connecté quand le cursor bouge sur le plateau
 func _on_cursor_moved(new_cell: Vector2) -> void:
@@ -185,7 +223,7 @@ func _on_cursor_moved(new_cell: Vector2) -> void:
 
 
 func _on_turn_manager_player_turned() -> void:
-	_walkable_cells = level.get_walkable_cells(_player, _units)
+	_walkable_cells = environment_level.get_walkable_cells(_player, _units)
 	unit_overlay.draw(_walkable_cells)
 	unit_path.initalize(_walkable_cells)
 	_player.is_onAction = false
@@ -195,3 +233,7 @@ func _on_turn_manager_player_turn_finished() -> void:
 	_walkable_cells.clear()
 	unit_overlay.clear()
 	unit_path.stop()
+
+func _on_skill_selected(skill: SkillsData) -> void:
+	print("Un nouveau sort à été choisi", skill.skill_name)
+	selected_skill = skill

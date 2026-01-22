@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SkillsData" load_steps=2 format=3 uid="uid://ntast6edt2gh"]
+
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="1_183d3"]
+
+[resource]
+script = ExtResource("1_183d3")
+description = "A basical attack"
+metadata/_custom_type_script = "uid://banba74pyncs0"
