@@ -29,6 +29,7 @@ var selected_skill : SkillsData = null
 
 func _ready() -> void:
 	reinitialize()
+	SignalBus.skill_seleted.connect(_on_skill_selected)
 	
 ##function appeler pour vidé toutes les entité connue et obtenir les nouvelles.
 func reinitialize() -> void:
@@ -166,6 +167,7 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 	#s'il peu allor il paie
 	_player.pay_cost_skill(selected_skill)
 	
+
 	match selected_skill.type:
 		SkillsData.Skill_type.DAMAGE:
 			var command = AttackCommand.new(_player,_units.get(target_cell), selected_skill)
@@ -176,7 +178,15 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 			await _execute_command(command)
 			turn_manager.on_player_action_done()
 		SkillsData.Skill_type.BUFF:
-			pass
+			var target_unit: Unit
+			
+			if selected_skill.target_self:
+				target_unit = _player
+			else:
+				target_unit = _units.get(target_cell)
+			var command = BuffCommand.new(_player, target_unit, selected_skill)
+			await _execute_command(command)
+			turn_manager.on_player_action_done()
 		
 ##fonction pour retourner un chemin pour l'ennemis
 func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
@@ -235,5 +245,8 @@ func _on_turn_manager_player_turn_finished() -> void:
 	unit_path.stop()
 
 func _on_skill_selected(skill: SkillsData) -> void:
+	if skill  == null:
+		selected_skill = null
+		return
 	print("Un nouveau sort à été choisi", skill.skill_name)
 	selected_skill = skill

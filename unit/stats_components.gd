@@ -1,4 +1,5 @@
 ##objet responsable uniquement des statistiques d’une entité.
+##Gère la mémoire des buffs et leur expiration automatique.
 class_name StatsComponent extends Node
 
 #Ce qu’il DOIT gérer
@@ -14,12 +15,19 @@ class_name StatsComponent extends Node
 
 @export var _stats : Unit_Stats
 
+
 signal health_changed(current_hp, max_hp)
 signal health_depleted(unit: Unit)
+signal stat_buffed(stat_affect: SkillsData.Stat_affect, turn_duration: int)
+
+var active_buffs := []
 
 @onready var unit : Unit = $".."
 var current_health : int : set = set_current_health
 var current_stamina : int
+var current_mana : int
+var current_move_range: int
+
 
 func set_current_health(new_value) ->void:
 	current_health = clampi(new_value,0, _stats.max_health)
@@ -37,7 +45,9 @@ func _ready() -> void:
 		
 		current_health = _stats.max_health
 		current_stamina = _stats.stamina
-
+		current_move_range = _stats.move_range
+		current_mana = _stats.mana
+		
 func get_move_range() -> int:
 	return _stats.move_range
 
@@ -49,11 +59,71 @@ func is_heath_critical() -> bool:
 func get_power_attack(bonus_damage: int = 0) -> int:
 	return _stats.attack + bonus_damage
 
+##function qui calcule les dégat réçu par le joueur
 func take_damage(amount: int) -> void:
 	var final_damage : int = max(1,amount - _stats.defense)
 	print(_stats.entity_name, " has lost ", final_damage, "PV")
+	Globals.signalBus.TakedDamage.emit(final_damage, owner.global_position)
+	
 	self.current_health -= final_damage 
+	
 	print(_stats.entity_name, " has now ", current_health, "PV")
 	
 func take_heal(amount: int) -> void:
 	self.current_health += amount
+
+func buff_stat(stat_affect: SkillsData.Stat_affect, amount: int, turn_duration: int ) -> void:
+	match stat_affect:
+		SkillsData.Stat_affect.ATTACK:
+			_stats.attack += amount
+		SkillsData.Stat_affect.DEFENSE:
+			_stats.defense += amount
+		SkillsData.Stat_affect.MAGICAL_ATTACK:
+			_stats.magical_attack += amount
+		SkillsData.Stat_affect.MOVE_RANGE:
+			_stats.move_range += amount
+		SkillsData.Stat_affect.MANA:
+			_stats.mana += amount
+		SkillsData.Stat_affect.STAMINA:
+			current_stamina += amount
+		SkillsData.Stat_affect.HEALTH:
+			current_health += amount
+	
+	if turn_duration != 0:
+		active_buffs.append(
+					{ "stat": stat_affect, 
+					"amount": amount, 
+					"turn_duration" : turn_duration}
+					)
+			
+	stat_buffed.emit(stat_affect, turn_duration)
+
+func on_turn_start() -> void:
+	
+	
+	##parcourir la liste des buff quon à en mémoire
+	for i in range(active_buffs.size(),0, -1) :
+		var buff =  active_buffs[i-1]
+		if buff.turn_duration > 0:
+			buff.turn_duration -= 1
+			
+		elif buff.turn_duration == 0:
+			match buff.stat:
+				SkillsData.Stat_affect.ATTACK:
+					_stats.attack -= buff.amount
+				SkillsData.Stat_affect.DEFENSE:
+					_stats.defense -= buff.amount
+				SkillsData.Stat_affect.MAGICAL_ATTACK:
+					_stats.magical_attack -= buff.amount
+				SkillsData.Stat_affect.MOVE_RANGE:
+					_stats.move_range -= buff.amount
+				SkillsData.Stat_affect.MANA:
+					_stats.mana -= buff.amount
+				SkillsData.Stat_affect.STAMINA:
+					current_stamina -= buff.amount
+				SkillsData.Stat_affect.HEALTH:
+					current_health -= buff.amount
+			
+			active_buffs.erase(buff)
+			
+	current_move_range = _stats.move_range	

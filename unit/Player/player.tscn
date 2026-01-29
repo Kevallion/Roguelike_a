@@ -1,26 +1,113 @@
-[gd_scene load_steps=10 format=3 uid="uid://cp4jrwqcmtgr7"]
+[gd_scene format=3 uid="uid://cp4jrwqcmtgr7"]
 
 [ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://unit/unit.tscn" id="1_bfvk7"]
-[ext_resource type="Texture2D" uid="uid://cvq4qq6i5o42a" path="res://asset/Heroes/knight.png" id="2_04jtt"]
 [ext_resource type="Script" uid="uid://dcno2cigla0l2" path="res://unit/Player/player.gd" id="2_aph0k"]
 [ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="3_8fa5x"]
 [ext_resource type="Resource" uid="uid://ntast6edt2gh" path="res://unit/Player/Knight/basic_attack.tres" id="4_dagme"]
 [ext_resource type="Resource" uid="uid://clcnhf6a82m35" path="res://unit/Player/knight_stats.tres" id="5_j1nbm"]
 [ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/stats_components.gd" id="5_ur2e0"]
-[ext_resource type="Resource" uid="uid://bk7obnulfcvk6" path="res://unit/Player/Knight/estocade.tres" id="5_vo2wx"]
+[ext_resource type="Resource" uid="uid://bk7obnulfcvk6" path="res://unit/Player/Knight/fracas.tres" id="5_vo2wx"]
 [ext_resource type="Resource" uid="uid://ni2yw6xq71km" path="res://unit/Player/Knight/health.tres" id="6_xs7vv"]
+[ext_resource type="Texture2D" uid="uid://doidi02kfdjv8" path="res://asset/Heroes/knight/S_Walk.png" id="7_dagme"]
+[ext_resource type="Texture2D" uid="uid://c3myb0v5snv84" path="res://asset/Heroes/knight/S_Idle.png" id="7_vo2wx"]
 
-[node name="Player" instance=ExtResource("1_bfvk7")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_k2rtl"]
+atlas = ExtResource("7_vo2wx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jx6b2"]
+atlas = ExtResource("7_vo2wx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fv77v"]
+atlas = ExtResource("7_vo2wx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dejw"]
+atlas = ExtResource("7_vo2wx")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vo2wx"]
+atlas = ExtResource("7_dagme")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xs7vv"]
+atlas = ExtResource("7_dagme")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2k2j"]
+atlas = ExtResource("7_dagme")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cqwan"]
+atlas = ExtResource("7_dagme")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iktnf"]
+atlas = ExtResource("7_dagme")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkhwg"]
+atlas = ExtResource("7_dagme")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cqwan"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k2rtl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jx6b2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fv77v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1dejw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vo2wx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xs7vv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2k2j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cqwan")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iktnf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkhwg")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
+[node name="Player" unique_id=961419667 instance=ExtResource("1_bfvk7")]
 script = ExtResource("2_aph0k")
 skills = Array[ExtResource("3_8fa5x")]([ExtResource("4_dagme"), ExtResource("5_vo2wx"), ExtResource("6_xs7vv")])
 
-[node name="UnitVisual" parent="." index="0" node_paths=PackedStringArray("_visual")]
-_visual = NodePath("Sprite2D")
+[node name="UnitVisual" parent="." index="0" node_paths=PackedStringArray("_anim", "_visual", "_unit")]
+_anim = NodePath("AnimatedSprite2D")
+_visual = NodePath("AnimatedSprite2D")
+_unit = NodePath("..")
 
-[node name="Sprite2D" type="Sprite2D" parent="UnitVisual" index="0"]
-texture = ExtResource("2_04jtt")
-offset = Vector2(0, -8.135)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UnitVisual" index="0" unique_id=96050955]
+sprite_frames = SubResource("SpriteFrames_cqwan")
+animation = &"idle"
+autoplay = "idle"
 
-[node name="StatsComponent" type="Node" parent="." index="1"]
+[node name="StatsComponent" type="Node" parent="." index="1" unique_id=475916715]
 script = ExtResource("5_ur2e0")
 _stats = ExtResource("5_j1nbm")

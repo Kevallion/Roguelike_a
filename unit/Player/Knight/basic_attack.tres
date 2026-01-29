@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="SkillsData" load_steps=2 format=3 uid="uid://ntast6edt2gh"]
+[gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://ntast6edt2gh"]
 
 [ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="1_183d3"]
+[ext_resource type="Texture2D" uid="uid://dlb54bvnwn3b8" path="res://asset/ui/skills/tournoyante_icon.tres" id="1_vrcux"]
 
 [resource]
 script = ExtResource("1_183d3")
 description = "A basical attack"
+icon = ExtResource("1_vrcux")
 metadata/_custom_type_script = "uid://banba74pyncs0"

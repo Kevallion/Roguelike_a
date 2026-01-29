@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="SkillsData" load_steps=3 format=3 uid="uid://bk7obnulfcvk6"]
+[gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://bk7obnulfcvk6"]
 
-[ext_resource type="Texture2D" uid="uid://cvq4qq6i5o42a" path="res://asset/Heroes/knight.png" id="1_wl8kd"]
+[ext_resource type="Texture2D" uid="uid://bo3tnb8f3rnuj" path="res://asset/ui/skills/fracas_icon.tres" id="1_wl8kd"]
 [ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="2_vuvs1"]
 
 [resource]
 script = ExtResource("2_vuvs1")
-skill_name = "Estocade"
+skill_name = "Fracas"
 description = "A blow struck with the point of the sword to pierce."
 icon = ExtResource("1_wl8kd")
 stamina_cost = 2

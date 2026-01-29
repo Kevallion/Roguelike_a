@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bxfr2hy61foef"]
+
+[sub_resource type="Gradient" id="Gradient_clj7y"]
+offsets = PackedFloat32Array(0.18262412, 0.93439716)
+colors = PackedColorArray(0.043039158, 0.04303915, 0.04303915, 1, 0.6872153, 0.6872149, 0.6872149, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yx7mw"]
+gradient = SubResource("Gradient_clj7y")
+
+[sub_resource type="Environment" id="Environment_mdxr4"]
+background_mode = 3
+background_color = Color(0.7886584, 0.4523322, 0.78701997, 1)
+tonemap_mode = 3
+tonemap_exposure = 0.64
+glow_enabled = true
+glow_hdr_threshold = 0.25
+adjustment_enabled = true
+adjustment_contrast = 0.83
+adjustment_saturation = 0.55
+adjustment_color_correction = SubResource("GradientTexture1D_yx7mw")
+
+[node name="WorldEnvironment" type="WorldEnvironment" unique_id=1914867463]
+environment = SubResource("Environment_mdxr4")

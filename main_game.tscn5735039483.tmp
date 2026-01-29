@@ -2,14 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://b64k8v4cxdtth" path="res://environment/levels/level_01.tscn" id="1_1oj5k"]
 [ext_resource type="Script" uid="uid://cxr7rx6rxi1hc" path="res://hud.gd" id="1_yx7mw"]
-[ext_resource type="Script" uid="uid://b3vipm4ybv7of" path="res://UI/skil_bar.gd" id="2_2pltu"]
 [ext_resource type="PackedScene" uid="uid://bxfr2hy61foef" path="res://asset/Environment/world_environment.tscn" id="2_ykeeq"]
-[ext_resource type="PackedScene" uid="uid://dbkrdivn3awpo" path="res://UI/skill_button.tscn" id="3_dugkq"]
 
 [node name="MainGame" type="Node2D" unique_id=582875553]
 
 [node name="UI_layer" type="CanvasLayer" parent="." unique_id=1399940979]
-layer = 2
+layer = 0
 
 [node name="HUD" type="Control" parent="UI_layer" unique_id=670825697]
 layout_mode = 3
@@ -20,27 +18,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_yx7mw")
-metadata/_edit_use_anchors_ = true
-
-[node name="SkillBar" type="HBoxContainer" parent="UI_layer/HUD" unique_id=1290266582]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 46.0
-offset_top = -135.0
-offset_right = 612.0
-offset_bottom = -44.0
-grow_vertical = 0
-theme_override_constants/separation = 14
-script = ExtResource("2_2pltu")
-metadata/_custom_type_script = "uid://b3vipm4ybv7of"
-
-[node name="Skill_Button" parent="UI_layer/HUD/SkillBar" unique_id=748911115 instance=ExtResource("3_dugkq")]
-layout_mode = 2
-
-[node name="Skill_Button2" parent="UI_layer/HUD/SkillBar" unique_id=735819919 instance=ExtResource("3_dugkq")]
-layout_mode = 2
 
 [node name="InventoryWindow" type="Control" parent="UI_layer" unique_id=2012434335]
 layout_mode = 3
@@ -60,4 +37,4 @@ offset_bottom = 40.0
 
 [node name="LevelLoader" type="Node2D" parent="." unique_id=1422187040]
 
-[node name="Level_01" parent="LevelLoader" unique_id=1486667070 instance=ExtResource("1_1oj5k")]
+[node name="Level_01" parent="LevelLoader" unique_id=1674756149 instance=ExtResource("1_1oj5k")]

@@ -1,3 +1,4 @@
+##Gère les dégâts et les bonus de sorts
 class_name AttackCommand extends Command
 
 var attacker : Unit
@@ -14,7 +15,13 @@ func execute() -> void:
 	attacker.is_onAction = true
 	var bonus_amount = skill.amount if skill else 0
 	var damage := attacker.stat_component.get_power_attack(bonus_amount)
+	
+	if defender == null:
+		_on_finished()
+		return
+	
 	await attacker.unit_visual.play_attack_animation(defender.global_position)
+	
 	defender.stat_component.take_damage(damage)
 	
 	# On attend la prochaine image avant de signaler la fin

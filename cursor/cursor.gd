@@ -36,5 +36,5 @@ func _unhandled_input(event: InputEvent) -> void:
 	#si le joueur confirme une position on valid un click pour une nouvelle célule
 	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("right_click"):
 		accept_pressed.emit(cell)
-		#stoper la propagation de l'input pour pas que d'autre entité puisse prendre en compte
-		get_viewport().set_input_as_handled()
+		##stoper la propagation de l'input pour pas que d'autre entité puisse prendre en compte
+		#get_viewport().set_input_as_handled()

@@ -1,17 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://4xq8kwuy4qx4"]
+[gd_scene format=3 uid="uid://4xq8kwuy4qx4"]
 
 [ext_resource type="Script" uid="uid://tuabk58smw82" path="res://cursor/cursor.gd" id="1_nehsy"]
 [ext_resource type="Texture2D" uid="uid://8jv34feosy75" path="res://asset/Environment/tilemap_packed.png" id="2_8eho3"]
 
-[node name="Cursor" type="Node2D"]
+[node name="Cursor" type="Node2D" unique_id=1178102666]
 script = ExtResource("1_nehsy")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=110870781]
 texture = ExtResource("2_8eho3")
 region_enabled = true
 region_rect = Rect2(0, 80, 16, 16)
 region_filter_clip_enabled = true
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=285297003]
 unique_name_in_owner = true
 one_shot = true

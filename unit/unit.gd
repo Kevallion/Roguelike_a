@@ -64,7 +64,7 @@ func walk_along(path: PackedVector2Array) -> void:
 		# 1. On lance l'animation de saut (Le visuel gère le Y)
 		if unit_visual != null:
 			unit_visual.face_direction(target_direction)
-			unit_visual.play_jump_animation(step_duration)
+			unit_visual.play_walk_animation(step_duration)
 			
 			
 		# 2. On déplace l'unité vers la case (L'unité gère le X et Y global)
@@ -104,7 +104,7 @@ func pay_cost_skill(skill: SkillsData) -> void:
 	if stat_component == null:
 		return
 	
-	stat_component._stats.move_range -= skill.move_range_cost
-	stat_component._stats.mana -= skill.mana_cost
-	stat_component._stats.stamina -= skill.stamina_cost
+	stat_component.current_move_range -= skill.move_range_cost
+	stat_component.current_mana -= skill.mana_cost
+	stat_component.current_stamina -= skill.stamina_cost
 	
