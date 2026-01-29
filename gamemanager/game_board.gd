@@ -51,40 +51,28 @@ func reinitialize() -> void:
 		if unit is Enemy:
 			var enemy  = unit as Enemy
 			enemy._player = _player
-			enemy.move_requested.connect(_try_to_move_enemy)
-			enemy.attack_requested.connect(_try_attack_ennemy)
-			enemy.flee_requested.connect(_try_to_flee_enemy)
-			
 			
 	#on fait connaitre au turn_manager les unités qui doivent jouer		
-	turn_manager.initialize(_units)
+	turn_manager.initialize(_units, self)
 	
 
-
-func _execute_command(command: Command) -> void:
+func execute_command(command: Command) -> void:
 	command.execute()
 	await command.finished
+
+func update_unit_position(unit: Unit, destination_cell: Vector2) -> void:
+	_units.erase(unit.cell)
+	unit.cell = destination_cell
+	_units[destination_cell] = unit
 
 ##fonction pour faire bouger un ennemis si le chemin est valide.
 func move_unit(unit: Unit, path: PackedVector2Array) -> void:
 	if path.is_empty():
 		return
 	
-	var destination_cell = path[-1]
-	
-	#on libère la position sur la gameboard
-	_units.erase(unit.cell)
-	
-	#on met à jour la céllule d'arrivé de l'unité
-	unit.cell = destination_cell
-	
-	#on réserve la destination dans le dico
-	_units[destination_cell] = unit
-	
-	#je crée une command de mouvement pour l'appeler après
-	var command := MoveCommand.new(unit,path)
+	var command := MoveCommand.new(unit,path, self)
 	#on attend que le chemin soit terminé
-	await _execute_command(command)
+	await execute_command(command)
 	
 
 	
@@ -101,54 +89,16 @@ func _try_move_player(new_cell: Vector2) -> void:
 	await move_unit(_player, _path)
 	turn_manager.on_player_action_done()
 
-##function qui essaie de faire bouger l'unité ennemy
-func _try_to_move_enemy(_unit_enemy: Unit, target_cell: Vector2) -> void:
-	var _path = get_path_to_player(_unit_enemy, target_cell)
-
-	if not _path.is_empty():
-		await move_unit(_unit_enemy,_path)
-	
-	await get_tree().process_frame # Une micro pause pour etre sur qu'on ecoute
-		
-	_unit_enemy.action_finished.emit()
-
 ##function qui essaie d'attaquer l'ennemie	
 func _try_attack_player(target_enemy: Unit) -> void:
 	var distance := grid.get_manathan_distance(_player.cell, target_enemy.cell)	
 	var attack_range := 1
 	if distance <= attack_range:
 		var command = AttackCommand.new(_player,target_enemy)
-		await _execute_command(command)
+		await execute_command(command)
 		turn_manager.on_player_action_done()
 	else:
 		_try_move_player(target_enemy.cell)
-
-func _try_to_flee_enemy(unit: Unit) -> void:
-	var enemy_walkable_cells = environment_level.get_walkable_cells(unit, _units)
-	var farthest_cells = grid.get_farthest_walkable_cell(unit.cell, enemy_walkable_cells)
-	unit_path.initalize(enemy_walkable_cells)
-	
-	var path = unit_path.build_path(unit.cell, farthest_cells,unit.move_range)
-	if path.is_empty():
-		_try_attack_ennemy(unit)
-	
-	await move_unit(unit, path)
-	#await get_tree().process_frame # Une micro pause pour etre sur qu'on ecoute
-		#
-	unit.action_finished.emit()
-	
-##function qui essaie d'attaquer le joueur
-func _try_attack_ennemy(unit: Unit) -> void:
-	var distance := grid.get_manathan_distance(unit.cell, _player.cell)	
-	var attack_range := 1
-	if distance <= attack_range:
-		var command = AttackCommand.new(unit,_player)
-		##ça se bloque ici vu que rien n'arrive
-		await _execute_command(command)
-		unit.action_finished.emit()
-	else:
-		_try_to_move_enemy(unit, _player.cell)
-		
 
 ##fonction qui va essayer de lancer le sort du joueur
 func _try_cast_skill_player(target_cell: Vector2) -> void:
@@ -171,11 +121,11 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 	match selected_skill.type:
 		SkillsData.Skill_type.DAMAGE:
 			var command = AttackCommand.new(_player,_units.get(target_cell), selected_skill)
-			await _execute_command(command)
+			await execute_command(command)
 			turn_manager.on_player_action_done()
 		SkillsData.Skill_type.HEAL:
 			var command = HealCommand.new(_player,_units.get(target_cell),selected_skill)
-			await _execute_command(command)
+			await execute_command(command)
 			turn_manager.on_player_action_done()
 		SkillsData.Skill_type.BUFF:
 			var target_unit: Unit
@@ -185,7 +135,7 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 			else:
 				target_unit = _units.get(target_cell)
 			var command = BuffCommand.new(_player, target_unit, selected_skill)
-			await _execute_command(command)
+			await execute_command(command)
 			turn_manager.on_player_action_done()
 		
 ##fonction pour retourner un chemin pour l'ennemis
