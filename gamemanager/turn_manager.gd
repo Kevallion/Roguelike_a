@@ -6,15 +6,17 @@ var _enemies: Array[Enemy] = []
 
 signal player_turned
 signal player_turn_finished
-signal player_died
+
 
 enum TurnState  {PLAYER, ENEMY, BUSY}
 var current_state = TurnState.PLAYER
+var game_board : GameBoard
 
 #initialize à besoin de savoir qui sont les enemies et sera appelé par gameboard
-func initialize(_units: Dictionary) -> void:
+func initialize(_units: Dictionary, _game_board: GameBoard = null) -> void:
 	_enemies.clear()
 	_player = null
+	game_board = _game_board
 	transition_to_state(TurnState.PLAYER)
 	
 	for unit in _units.values():
@@ -48,7 +50,13 @@ func _run_enemy_turn() -> void:
 		if enemy.is_sleeping:
 			continue
 		
-		await enemy.take_turn()
+		#on récupère l'intention de l'ennemie
+		var command = enemy.get_intention(game_board)
+
+		#si intention il y a on l'execute
+		if command:
+			await game_board.execute_command(command)
+
 
 func transition_to_state(new_state: TurnState) -> void:
 	var old_state = current_state

@@ -17,17 +17,18 @@ func execute() -> void:
 	var damage := attacker.stat_component.get_power_attack(bonus_amount)
 	
 	if defender == null:
+		await attacker.get_tree().process_frame
 		_on_finished()
-		return
+	else:
 	
-	await attacker.unit_visual.play_attack_animation(defender.global_position)
-	
-	defender.stat_component.take_damage(damage)
-	
-	# On attend la prochaine image avant de signaler la fin
-	# Cela laisse le temps au GameBoard de se mettre en position "await"
-	await attacker.get_tree().process_frame
-	_on_finished()
+		await attacker.unit_visual.play_attack_animation(defender.global_position)
+		
+		defender.stat_component.take_damage(damage)
+		
+		# On attend la prochaine image avant de signaler la fin
+		# Cela laisse le temps au GameBoard de se mettre en position "await"
+		await attacker.get_tree().process_frame
+		_on_finished()
 
 func _on_finished() -> void:
 	attacker.is_onAction = false

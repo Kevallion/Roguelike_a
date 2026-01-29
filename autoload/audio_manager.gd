@@ -10,7 +10,7 @@ func play(stream: AudioStream) -> void:
 	audio_player.stream = stream
 	audio_player.play()
 
-##function qui pour obtnir un lecteur qui ne joue pas de son
+##function qui va chercher si un lecteur ne joue pas de son
 func _get_available_audio_player() -> AudioStreamPlayer:
 
 	for audio_player in audio_players:
@@ -20,6 +20,7 @@ func _get_available_audio_player() -> AudioStreamPlayer:
 
 	return _create_new()
 
+##function pour crerrer un nouveau node AudioStreamPlayer
 func _create_new() -> AudioStreamPlayer:
 	print("creation d'un nouveau fichier audio")
 	var audio_player :=  AudioStreamPlayer.new()

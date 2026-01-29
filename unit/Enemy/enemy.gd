@@ -1,37 +1,38 @@
 ##Objet pour réprésenter tout ce que les enemies peuvent faire
 class_name Enemy extends Unit
 
-signal action_finished
-signal move_requested(unit: Unit, target_cell: Vector2)
-signal attack_requested(unit: Unit)
-signal flee_requested(unit: Unit)
 
 var _player: Player
-var is_sleeping := true 
-@export var view_range := 160.0
+var is_sleeping : bool = true 
+@export var view_range : float = 160.0
 
-##fonction à remplir assap
-func take_turn() -> void:
+## Retourne la commande que l'ennemi souhaite exécuter
+func get_intention(board: GameBoard) -> Command:
 	if is_heath_critical():
-		await flee()
+		return  _get_flee_intention(board)
 	elif is_player_visible():
 		if can_attack_player():
-			await attack_player()
+			return AttackCommand.new(self, _player)
 		else:
-			await move_toward_player()
-	else:
-		await patrol()
+			return _get_move_toward_player_intention(board)
+
+	else:	
+		return WaitCommand.new(self, 0.1)
+	
 		
 
 func is_player_visible() -> bool:
-	if is_instance_valid(Player):
+	if is_instance_valid(_player):
 		return _player.global_position.distance_to(global_position) < view_range
 	else:
 		return false
 
 func can_attack_player() -> bool:
-	var difference := (_player.cell - self.cell).abs()
-	var distance := difference.x + difference.y
+	if not is_instance_valid(_player):
+		return false
+	
+	var difference : Vector2 = (_player.cell - self.cell).abs()
+	var distance : float = difference.x + difference.y
 	return distance <= 1
 
 
@@ -40,28 +41,42 @@ func is_heath_critical() -> bool:
 		return false
 	return stat_component.is_heath_critical()
 	
-func patrol() -> void:
-	await get_tree().create_timer(0.1).timeout
-	action_finished.emit()
 
-func flee() -> void:
-	flee_requested.emit(self)
-	await action_finished
+func _get_flee_intention(board: GameBoard) -> Command:
+	# On récupère les cellules accessibles
+	var enemy_walkable_cells = board.environment_level.get_walkable_cells(self, board._units)
+	
+	# On cherche la cellule la plus éloignée
+	var farthest_cells = grid.get_farthest_walkable_cell(cell, enemy_walkable_cells)
+	
+	board.unit_path.initalize(enemy_walkable_cells)
+	var path = board.unit_path.build_path(cell, farthest_cells, move_range)
+	
+	if path.is_empty():
+		# Si bloqué, on attaque si possible, sinon on attend
+		if can_attack_player():
+			return AttackCommand.new(self, _player)
+		else:
+			return WaitCommand.new(self,0.1)
+	
+	return MoveCommand.new(self, path, board)
 
+
+func _get_move_toward_player_intention(board: GameBoard) -> Command:
+	#si le player n'est pas valide on balance un wait
+	if not is_instance_valid(_player):
+		return WaitCommand.new(self, 0.1)
+
+	var target_cell = grid.get_neareast_cells_around_a_target(cell, _player.cell)
 	
-func attack_player() -> void:
-	attack_requested.emit(self)
-	await action_finished
+	# On utilise la fonction utilitaire du GameBoard
+	var path = board.get_path_to_player(self, target_cell)
 	
-func wait() -> void:
-	print("j'attend un peu")
-	await get_tree().create_timer(0.1).timeout
-	action_finished.emit()
-	
-func move_toward_player():
-	var target_cell = grid.get_neareast_cells_around_a_target(self.cell, _player.cell)
-	move_requested.emit(self, target_cell)
-	await action_finished
+	if path.is_empty():
+		return WaitCommand.new(self,0.1)
+		
+	return MoveCommand.new(self, path, board)
+
 
 func die() -> void:
 	queue_free()
