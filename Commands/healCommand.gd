@@ -1,4 +1,7 @@
-##Gère le soin avec une sécurité sur les PV max.
+# Fichier: healCommand.gd
+# Rôle: Encapsule une action de soin.
+# Applique un montant de soin à une unité "receiver" (receveur),
+# en provenance d'un "launcher" (lanceur), basé sur les propriétés d'une compétence.
 class_name HealCommand extends Command
 
 var receiver : Unit

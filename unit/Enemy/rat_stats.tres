@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Unit_Stats" load_steps=2 format=3 uid="uid://bvroam8k7cv50"]
+[gd_resource type="Resource" script_class="Unit_Stats" format=3 uid="uid://bvroam8k7cv50"]
 
 [ext_resource type="Script" uid="uid://dtcbnvw07ca12" path="res://unit/ressourses/unit_stats.gd" id="1_hhnh2"]
 
@@ -7,4 +7,5 @@ script = ExtResource("1_hhnh2")
 entity_name = "rat"
 point_health = 2
 point_attack = 2
+point_move_range = 1
 metadata/_custom_type_script = "uid://dtcbnvw07ca12"

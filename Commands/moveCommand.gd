@@ -1,4 +1,7 @@
-##command pour executer le déplacement de l'unité
+# Fichier: moveCommand.gd
+# Rôle: Encapsule l'action de déplacement d'une unité.
+# Contient l'unité à déplacer, le chemin à suivre, et une référence optionnelle
+# au GameBoard pour mettre à jour la position logique de l'unité.
 class_name MoveCommand extends Command
 
 var unit : Unit

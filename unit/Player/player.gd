@@ -1,4 +1,8 @@
-##Objet qui réprésente la logique du joueur
+# Fichier: player.gd
+# Rôle: Représente le joueur.
+# Cette classe hérite de `Unit` et y ajoute la logique spécifique au joueur.
+# Sa principale responsabilité est de communiquer avec le reste du jeu via le `SignalBus`
+# lorsque des événements majeurs le concernant surviennent, comme sa mort (`player_died`).
 class_name Player extends Unit
 
 

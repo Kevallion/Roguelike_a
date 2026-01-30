@@ -1,3 +1,9 @@
+# Fichier: gamestate.gd
+# Rôle: Gère l'état global du jeu en utilisant une machine à états finis (Finite State Machine).
+# Il définit les différents états possibles (MENU, GAME, PAUSE, GAMEOVER) et contrôle les transitions
+# entre eux. Lorsqu'un état change, il émet le signal `state_changed` pour que d'autres parties
+# du jeu puissent réagir de manière appropriée.
+
 extends Node
 
 #Informer tous les systèmes du jeu qu’un changement d’état a eu lieu.

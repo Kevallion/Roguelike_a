@@ -1,4 +1,15 @@
-##Cette objet doit permettre de géré les tours des entité.
+# Fichier: turn_manager.gd
+# Rôle: Gère le déroulement des tours à la manière d'une machine à états.
+# Il dicte qui peut agir (le joueur ou les ennemis) à un instant T.
+#
+# États possibles:
+# - PLAYER: C'est le tour du joueur. Le système attend une action de sa part.
+# - ENEMY: C'est le tour des ennemis. Le manager exécute l'action de chaque ennemi l'un après l'autre.
+# - BUSY: Un état transitoire utilisé pendant qu'une action est en cours d'exécution,
+#   pour éviter que d'autres actions ne se déclenchent en même temps.
+#
+# Le cycle est simple: Tour du Joueur -> Tour des Ennemis -> Tour du Joueur...
+
 class_name TurnManager extends Node
 
 var _player : Player

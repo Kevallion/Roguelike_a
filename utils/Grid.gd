@@ -1,3 +1,17 @@
+# Fichier: Grid.gd
+# Rôle: `Resource` agissant comme une boîte à outils pour toutes les manipulations de la grille.
+# Il ne contient pas l'état de la grille (qui est dans GameBoard), mais fournit toutes
+# les fonctions utilitaires nécessaires pour raisonner sur un espace en 2D quadrillé.
+#
+# Fonctions clés:
+# - Conversions: `calculate_map_position` (de grille vers pixels) et `calculate_grid_coordinate`
+#   (de pixels vers grille).
+# - Calculs de distance: `get_manathan_distance` pour une distance de type "roguelike".
+# - Recherche: Fonctions pour trouver des cellules spécifiques dans une liste, comme la plus
+#   proche (`get_nearest_walkable_cell`) ou la plus éloignée (`get_farthest_walkable_cell`).
+# - Gestion des coordonnées: `clamp` pour s'assurer qu'une coordonnée reste dans les limites
+#   de la grille, et `get_unique_id` pour le pathfinding.
+
 class_name Grid extends Resource
 
 
@@ -91,3 +105,32 @@ func get_neareast_cells_around_a_target(start_cell: Vector2, target_cell: Vector
 			nearest_cell = neighbor_cell
 	
 	return nearest_cell
+
+func get_cells_in_cross(center: Vector2, size: int) -> Array[Vector2]:
+	var cells : Array[Vector2]= []
+	for i in range(1, size + 1):
+		for cell in [Vector2.UP, Vector2.RIGHT, Vector2.DOWN,Vector2.LEFT]:
+			var neighbor_cell = center + (cell * i)
+
+			if is_within_bounds(neighbor_cell):
+				cells.append(neighbor_cell)
+	return cells
+
+func get_cells_in_square(center: Vector2, size: int) -> Array[Vector2]:
+	var cells : Array[Vector2]= []
+	for row in range(-size, size + 1):
+		for col in range(-size, size + 1):
+			var neighbor_cell = center + Vector2(row, col)
+
+			if is_within_bounds(neighbor_cell):
+				cells.append(neighbor_cell)
+	return cells
+
+func get_cells_in_circle(center: Vector2, size: int) -> Array[Vector2]:
+	var cells : Array[Vector2]= []
+	var square_cells : Array[Vector2] = get_cells_in_square(center, size)
+	for cell in square_cells:
+		var distance = get_manathan_distance(center, cell)
+		if distance <= size:
+			cells.append(cell)
+	return cells

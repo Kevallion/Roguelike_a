@@ -1,13 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://d373hbs2371ef"]
+[gd_scene format=3 uid="uid://d373hbs2371ef"]
 
-[ext_resource type="TileSet" uid="uid://clsd5gnskuo40" path="res://unit/unit_path.tres" id="1_d0cj4"]
 [ext_resource type="Script" uid="uid://ywx3y72unc3x" path="res://unit/unit_overlay.gd" id="2_dcgok"]
+[ext_resource type="TileSet" uid="uid://rn1bygx4ex0u" path="res://UI/overlay_cell_tilset.tres" id="2_egmd1"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d0cj4"]
-blend_mode = 2
+blend_mode = 1
 
-[node name="Unit_overlay" type="TileMapLayer"]
-self_modulate = Color(1, 1, 1, 0.287)
+[node name="Unit_overlay" type="Node2D" unique_id=439733676]
+self_modulate = Color(1, 1, 1, 0.21100001)
 material = SubResource("CanvasItemMaterial_d0cj4")
-tile_set = ExtResource("1_d0cj4")
 script = ExtResource("2_dcgok")
+
+[node name="MoveLayer" type="TileMapLayer" parent="." unique_id=558891917]
+unique_name_in_owner = true
+tile_set = ExtResource("2_egmd1")
+
+[node name="AttackLayer" type="TileMapLayer" parent="." unique_id=797077930]
+unique_name_in_owner = true
+self_modulate = Color(0.8099191, 0.3445254, 1.92523e-07, 1)
+tile_set = ExtResource("2_egmd1")
+
+[node name="ImpactLayer" type="TileMapLayer" parent="." unique_id=732372782]
+unique_name_in_owner = true
+self_modulate = Color(1, 0.18985108, 0.18617147, 1)
+tile_set = ExtResource("2_egmd1")

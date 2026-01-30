@@ -1,4 +1,7 @@
-##Applique des modifications de statistiques temporaires ou non
+# Fichier: buffCommand.gd
+# Rôle: Encapsule l'application d'un "buff" (amélioration de statistique).
+# Modifie une statistique d'une unité pour une durée déterminée ou permanente,
+# en se basant sur les informations de la compétence utilisée.
 class_name BuffCommand extends Command
 
 var receiver : Unit
@@ -17,7 +20,7 @@ func execute() -> void:
 		_on_finished()
 		return
 	
-	receiver.stat_component.buff_stat(skill.affect, skill.amount,skill.turn_effect)
+	receiver.stat_component.buff_stat(skill.affect, skill.amount,skill.turn_duration)
 	
 	# On attend la prochaine image avant de signaler la fin
 	# Cela laisse le temps au GameBoard de se mettre en position "await"

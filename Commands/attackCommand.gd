@@ -1,4 +1,7 @@
-##Gère les dégâts et les bonus de sorts
+# Fichier: attackCommand.gd
+# Rôle: Encapsule une action d'attaque.
+# Gère l'interaction entre un attaquant et un défenseur, calcule les dégâts
+# (potentiellement modifiés par une compétence) et joue l'animation d'attaque.
 class_name AttackCommand extends Command
 
 var attacker : Unit

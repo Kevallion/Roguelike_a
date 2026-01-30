@@ -1,4 +1,20 @@
-##Objet pour réprésenter tout ce que les enemies peuvent faire
+# Fichier: enemy.gd
+# Rôle: Définit le comportement et l'Intelligence Artificielle (IA) des unités ennemies.
+# Hérite de `Unit`.
+#
+# Logique de décision (IA):
+# La fonction clé est `get_intention()`, qui agit comme le "cerveau" de l'ennemi.
+# À chaque tour, elle décide de la meilleure action à entreprendre en retournant un objet `Command`.
+# La logique est la suivante:
+# 1. Si la vie est critique -> Tenter de fuir (`_get_flee_intention`).
+# 2. Sinon, si le joueur est visible ->
+#    a. S'il est à portée -> Attaquer (`AttackCommand`).
+#    b. Sinon -> Se déplacer vers lui (`_get_move_toward_player_intention`).
+# 3. Sinon (joueur non visible) -> Attendre son tour (`WaitCommand`).
+#
+# Optimisation:
+# La variable `is_sleeping` permet de désactiver le traitement de l'ennemi lorsqu'il est
+# hors de l'écran (géré par un `VisibleOnScreenNotifier2D`), économisant ainsi des ressources.
 class_name Enemy extends Unit
 
 

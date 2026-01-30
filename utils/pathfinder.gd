@@ -1,4 +1,16 @@
-##Objet qui permet d'obtenir le chemin sur une grille
+# Fichier: pathfinder.gd
+# Rôle: Implémente l'algorithme de recherche de chemin A*.
+#
+# Cette classe est un "wrapper" (un adaptateur) autour de la classe `AStar2D` native de Godot.
+# Son but est de simplifier l'utilisation de A* dans le contexte de notre grille.
+#
+# Fonctionnement:
+# 1. À l'initialisation (`_init`), on lui fournit la liste de toutes les cellules "marchables" (walkable).
+# 2. Il construit un graphe A* en ajoutant chaque cellule comme un point et en connectant
+#    les points adjacents.
+# 3. La fonction `find_path_to_target` peut alors être appelée pour trouver le chemin le plus
+#    court entre deux cellules sur ce graphe.
+
 class_name PathFinder extends RefCounted
 
 

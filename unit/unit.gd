@@ -1,5 +1,16 @@
-##Une unité sait comment se déplacer*
-##Sait tous ce qu'on player ou enemis peu faire
+# Fichier: unit.gd
+# Rôle: Classe de base pour toutes les entités interactives du jeu (le joueur et les ennemis).
+# Elle définit le comportement et les propriétés communs à toutes les unités.
+#
+# Responsabilités principales:
+# - Position sur la grille: Mémorise sa coordonnée (`cell`) sur la grille de jeu.
+# - Déplacement: Gère la logique de mouvement (`walk_along`) d'une case à l'autre,
+#   en synchronisant le déplacement visuel (via un tween et le UnitVisual) et la mise à jour
+#   de sa position logique.
+# - Statistiques: Possède une référence à son `StatsComponent` pour tout ce qui touche aux stats.
+# - Compétences: Contient les fonctions de base pour vérifier si une compétence peut être
+#   utilisée (`can_afford_skill`) et pour en payer le coût (`pay_cost_skill`).
+
 class_name Unit extends Node2D
 
 ##signal pour savoir quand l'entité à terminé son déplacement sur la grille

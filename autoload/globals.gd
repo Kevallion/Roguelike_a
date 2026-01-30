@@ -1,3 +1,9 @@
+# Fichier: globals.gd
+# Rôle: Fait office de "Service Locator" pour le projet. Il fournit un point d'accès global
+# et centralisé à toutes les instances des principaux managers (singletons) du jeu,
+# comme le gestionnaire d'état (Gamestate), de scènes (SceneChanger), etc.
+# Cela simplifie l'accès à ces managers depuis n'importe quel autre script.
+
 extends Node
 
 var state : Gamestate

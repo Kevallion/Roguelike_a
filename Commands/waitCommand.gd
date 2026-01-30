@@ -1,3 +1,7 @@
+# Fichier: waitCommand.gd
+# Rôle: Encapsule une action "d'attente".
+# Force une unité à ne rien faire pendant une courte durée. Utile pour les ennemis
+# qui ne peuvent pas atteindre le joueur, afin qu'ils passent leur tour.
 class_name WaitCommand extends "res://Commands/command.gd"
 
 var unit: Unit

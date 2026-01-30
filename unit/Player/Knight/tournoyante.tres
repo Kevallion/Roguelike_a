@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_183d3")
-description = "A basical attack"
+skill_name = "tournoyante"
+description = "une attaque qui tourne sur elle meme"
 icon = ExtResource("1_vrcux")
 metadata/_custom_type_script = "uid://banba74pyncs0"

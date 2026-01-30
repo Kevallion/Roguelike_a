@@ -1,3 +1,10 @@
+# Fichier: audio_manager.gd
+# Rôle: Gère la lecture de tous les effets sonores du jeu de manière optimisée.
+# Il fonctionne comme un "pool" de lecteurs audio (AudioStreamPlayer).
+# Au lieu de créer un nouveau nœud pour chaque son, il réutilise les lecteurs
+# qui ont fini de jouer. Si tous les lecteurs sont occupés, il en crée un
+# nouveau dynamiquement. Cela évite la création et la suppression constantes de nœuds.
+
 extends Node
 
 ##Variable qui contient les différents AudioStream

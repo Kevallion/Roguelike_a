@@ -1,3 +1,8 @@
+# Fichier: scenechanger.gd
+# Rôle: Gère les transitions entre les différentes scènes du jeu.
+# Il utilise un AnimationPlayer pour jouer une animation de fondu ("fade"),
+# offrant une transition visuelle propre et douce lorsqu'on passe d'une scène à une autre.
+
 class_name Scene_Changer extends CanvasLayer
 
 var new_scene_path := ""

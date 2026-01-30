@@ -1,5 +1,14 @@
-##objet responsable uniquement des statistiques d’une entité.
-##Gère la mémoire des buffs et leur expiration automatique.
+# Fichier: stats_components.gd
+# Rôle: Composant dédié à la gestion de toutes les statistiques d'une unité.
+# C'est un exemple d'Architecture Orientée Composants (Component-Based Architecture).
+# La logique des statistiques est isolée ici, au lieu d'être mélangée dans la classe `Unit`.
+#
+# Responsabilités:
+# - Contient les statistiques de base via la ressource `_stats` (Unit_Stats).
+# - Suit les valeurs actuelles (vie, mana, endurance, etc.).
+# - Applique les dégâts (`take_damage`) et les soins (`take_heal`).
+# - Gère les "buffs": applique les modifications de stats temporaires et suit leur durée,
+#   en les retirant automatiquement à la fin du bon nombre de tours (`on_turn_start`).
 class_name StatsComponent extends Node
 
 #Ce qu’il DOIT gérer
@@ -72,7 +81,9 @@ func take_damage(amount: int) -> void:
 func take_heal(amount: int) -> void:
 	self.current_health += amount
 
+##fonction qui applique un buff temporaire à la stat	
 func buff_stat(stat_affect: SkillsData.Stat_affect, amount: int, turn_duration: int ) -> void:
+	
 	match stat_affect:
 		SkillsData.Stat_affect.ATTACK:
 			_stats.attack += amount
@@ -85,7 +96,9 @@ func buff_stat(stat_affect: SkillsData.Stat_affect, amount: int, turn_duration: 
 		SkillsData.Stat_affect.MANA:
 			_stats.mana += amount
 		SkillsData.Stat_affect.STAMINA:
+			print("un buff à été appliqué de stamina")
 			current_stamina += amount
+			print(current_stamina)
 		SkillsData.Stat_affect.HEALTH:
 			current_health += amount
 	

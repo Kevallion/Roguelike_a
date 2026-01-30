@@ -1,7 +1,15 @@
-##Representer et organiser mon plateau, Il connait toutes les entité qui sont sur des célules
-##Il peut dire si la célule est occupé our pas
-##Les unité peuvent bouger seulement autour de la grille et une à la fois.
-##c'est la la glue qui regroupe tout mes composants
+# Fichier: game_board.gd
+# Rôle: C'est la classe centrale qui orchestre l'ensemble du plateau de jeu.
+# Elle agit comme la "colle" qui lie tous les systèmes principaux. Ses responsabilités sont:
+# - Gérer les unités: Elle maintient un dictionnaire de toutes les unités (joueur, ennemis)
+#   présentes sur le plateau et connaît leur position.
+# - Exécution des commandes: Elle centralise l'exécution de toutes les actions via le Command Pattern
+#   (déplacement, attaque, sorts...).
+# - Interaction du joueur: Elle interprète les entrées du joueur (clics de souris) pour
+#   déclencher les actions correspondantes (déplacer, attaquer, lancer un sort).
+# - Coordination: Elle fait le lien entre la grille logique (Grid), le gestionnaire de tours (TurnManager)
+#   et les informations du niveau (EnvironmentLevel) pour s'assurer que les règles du jeu sont respectées.
+
 class_name GameBoard extends Node2D
 
 
@@ -23,13 +31,16 @@ var _units := {}
 ##les célules sur lesquelles on peut marcher
 var _walkable_cells := []
 
+##celule des skills
+var skill_cells_range := []	
+
 ##réference pour du joueur
 var _player : Player
 var selected_skill : SkillsData = null
 
 func _ready() -> void:
 	reinitialize()
-	SignalBus.skill_seleted.connect(_on_skill_selected)
+	SignalBus.skill_selected.connect(_on_skill_selected)
 	
 ##function appeler pour vidé toutes les entité connue et obtenir les nouvelles.
 func reinitialize() -> void:
@@ -88,10 +99,17 @@ func _try_move_player(new_cell: Vector2) -> void:
 	
 	#si la celule qu'on veut n'est pas dedans alors on demande la célule la plus proche
 	if not new_cell in _walkable_cells:
+		print("not in walkable cells")
 		new_cell = grid.get_nearest_walkable_cell(new_cell,walkable_cells)
+		print("new cell", new_cell)
+	
+	if new_cell == _player.cell:
+		return
+	
 	
 	#je recupère le chemin
 	var _path = unit_path.build_path(_player.cell,new_cell,_player.move_range)
+	print(_path)
 	await move_unit(_player, _path)
 	turn_manager.on_player_action_done()
 
@@ -112,23 +130,26 @@ func _try_attack_player(target_enemy: Unit) -> void:
 ##fonction qui va essayer de lancer le sort du joueur
 func _try_cast_skill_player(target_cell: Vector2) -> void:
 	var skill = selected_skill
-	
+	Globals.signalBus.skill_selected.emit(null)
+
 	#calculer la distance pour ensuite vérifier la porté
 	var distance = grid.get_manathan_distance(_player.cell,target_cell)
 	
 	#s'il est à porté il pourra attaquer
-	if distance < selected_skill.min_range or distance > selected_skill.max_range:
+	if distance < skill.min_range or distance > skill.max_range:
+		print('hors distance')
 		return
 	
 	#on vérifie s'il peu se payer le skill d'abord
 	if not _player.can_afford_skill(skill):
+		print("n'a pas de ressource sufisante")
 		return 
 	
 	#s'il peu allor il paie
 	_player.pay_cost_skill(skill)
 	
 
-	match selected_skill.type:
+	match skill.type:
 		SkillsData.Skill_type.DAMAGE:
 			var command = AttackCommand.new(_player,_units.get(target_cell), skill)
 			await execute_command(command)
@@ -138,9 +159,10 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 			await execute_command(command)
 			turn_manager.on_player_action_done()
 		SkillsData.Skill_type.BUFF:
+			print("buff de sort lancé")
 			var target_unit: Unit
 			
-			if selected_skill.target_self:
+			if skill.target_self:
 				target_unit = _player
 			else:
 				target_unit = _units.get(target_cell)
@@ -190,7 +212,26 @@ func _on_cursor_accept_pressed(cell: Vector2) -> void:
 #signal connecté quand le cursor bouge sur le plateau
 func _on_cursor_moved(new_cell: Vector2) -> void:
 	if turn_manager.is_player_turn():
-		unit_path.draw_path(_player.cell,new_cell, _player.move_range)
+		
+
+		if selected_skill != null:
+			match selected_skill.aoe_shape:
+				SkillsData.AOE_Shape.CIRCLE:
+					var circle_cells = grid.get_cells_in_circle(new_cell, selected_skill.aoe_size)
+					unit_overlay.draw_impact(circle_cells)
+				SkillsData.AOE_Shape.CROSS:
+					var cross_cells = grid.get_cells_in_cross(new_cell, selected_skill.aoe_size)
+					unit_overlay.draw_impact(cross_cells)
+				SkillsData.AOE_Shape.SQUARE:
+					var square_cells = grid.get_cells_in_square(new_cell, selected_skill.aoe_size)
+					unit_overlay.draw_impact(square_cells)
+				SkillsData.AOE_Shape.POINT:
+					if skill_cells_range.has(new_cell):
+						unit_overlay.draw_impact([new_cell])
+		else:
+			unit_path.draw_path(_player.cell,new_cell, _player.move_range)
+
+
 
 
 func _on_turn_manager_player_turned() -> void:
@@ -208,6 +249,13 @@ func _on_turn_manager_player_turn_finished() -> void:
 func _on_skill_selected(skill: SkillsData) -> void:
 	if skill  == null:
 		selected_skill = null
+		unit_overlay.clear_attack()
+		unit_overlay.clear_impact()
+		skill_cells_range.clear()
+		
 		return
+
+	skill_cells_range = grid.get_cells_in_circle(_player.cell, skill.max_range)
+	unit_overlay.draw_range(skill_cells_range)
 	print("Un nouveau sort à été choisi", skill.skill_name)
 	selected_skill = skill
