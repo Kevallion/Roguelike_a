@@ -252,9 +252,10 @@ func _on_skill_selected(skill: SkillsData) -> void:
 		unit_overlay.clear_attack()
 		unit_overlay.clear_impact()
 		skill_cells_range.clear()
+		unit_overlay.move_layer.visible = true
 		
 		return
-
+	unit_overlay.move_layer.visible = false
 	skill_cells_range = grid.get_cells_in_circle(_player.cell, skill.max_range)
 	unit_overlay.draw_range(skill_cells_range)
 	print("Un nouveau sort à été choisi", skill.skill_name)
