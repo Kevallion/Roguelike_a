@@ -12,13 +12,13 @@ class_name Unit_Stats extends Resource
 @export var entity_name := ""
 
 @export_group("Unit Stat Point")
-@export_range(0,4,1) var point_health := 0 : set = set_point_health
-@export_range(0,4,1) var point_defense := 0 : set = set_point_defense
-@export_range(0,4,1) var point_attack := 0 : set = set_point_attack
-@export_range(0,4,1) var point_magical_attack := 0 : set = set_point_magical_attack
-@export_range(0,4,1) var point_move_range := 0 : set = set_point_move_range
-@export_range(0,4,1) var point_stamina := 0 : set = set_point_stamina
-@export_range(0,4,1) var point_mana := 0 : set = set_point_mana
+@export_range(0,10,1) var point_health := 0 : set = set_point_health
+@export_range(0,10,1) var point_defense := 0 : set = set_point_defense
+@export_range(0,10,1) var point_attack := 0 : set = set_point_attack
+@export_range(0,10,1) var point_magical_attack := 0 : set = set_point_magical_attack
+@export_range(0,10,1) var point_move_range := 0 : set = set_point_move_range
+@export_range(0,10,1) var point_stamina := 0 : set = set_point_stamina
+@export_range(0,10,1) var point_mana := 0 : set = set_point_mana
 
 var max_health := 0
 var defense := 0

@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://dh2d03fi8exy5" path="res://environment/level.gd" id="1_2ybft"]
 [ext_resource type="Script" uid="uid://bfk4x0er1llpi" path="res://environment/levels/camera_component.gd" id="1_clj7y"]
-[ext_resource type="Resource" uid="uid://bgc8oa3rwbxwf" path="res://utils/Grid.tres" id="2_clj7y"]
+[ext_resource type="Resource" uid="uid://bgc8oa3rwbxwf" path="res://Utils/Grid.tres" id="2_clj7y"]
 [ext_resource type="Script" uid="uid://svv2d8r307bg" path="res://gamemanager/game_board.gd" id="2_scq4g"]
 [ext_resource type="Script" uid="uid://budt5xd5x2bi" path="res://gamemanager/turn_manager.gd" id="3_2ybft"]
-[ext_resource type="PackedScene" uid="uid://d373hbs2371ef" path="res://unit/unit_overlay.tscn" id="4_clj7y"]
-[ext_resource type="PackedScene" uid="uid://e85s3dhsowhe" path="res://unit/unit_path.tscn" id="5_mdxr4"]
+[ext_resource type="PackedScene" uid="uid://d373hbs2371ef" path="res://Unit/unit_overlay.tscn" id="4_clj7y"]
+[ext_resource type="PackedScene" uid="uid://e85s3dhsowhe" path="res://Unit/unit_path.tscn" id="5_mdxr4"]
 [ext_resource type="TileSet" uid="uid://dv3emkfle6el4" path="res://asset/Environment/environment_tileset.tres" id="5_qix1r"]
-[ext_resource type="PackedScene" uid="uid://4xq8kwuy4qx4" path="res://cursor/cursor.tscn" id="6_qix1r"]
-[ext_resource type="PackedScene" uid="uid://cp4jrwqcmtgr7" path="res://unit/Player/player.tscn" id="7_sjalu"]
-[ext_resource type="PackedScene" uid="uid://bslui3vkeume6" path="res://unit/Enemy/enemy.tscn" id="8_x2abt"]
+[ext_resource type="PackedScene" uid="uid://4xq8kwuy4qx4" path="res://Cursor/cursor.tscn" id="6_qix1r"]
+[ext_resource type="PackedScene" uid="uid://cp4jrwqcmtgr7" path="res://Unit/Player/player.tscn" id="7_sjalu"]
+[ext_resource type="PackedScene" uid="uid://bslui3vkeume6" path="res://Unit/Enemy/enemy.tscn" id="8_x2abt"]
 
 [node name="Level_01" type="Node2D" unique_id=1486667070]
 

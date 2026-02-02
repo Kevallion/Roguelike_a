@@ -32,7 +32,7 @@ var _units := {}
 var _walkable_cells := []
 
 ##celule des skills
-var skill_cells_range := []	
+var skill_cells_range :	Array[Vector2] = []	
 
 ##réference pour du joueur
 var _player : Player
@@ -129,7 +129,9 @@ func _try_attack_player(target_enemy: Unit) -> void:
 
 ##fonction qui va essayer de lancer le sort du joueur
 func _try_cast_skill_player(target_cell: Vector2) -> void:
-	var skill = selected_skill
+	var skill : SkillsData = selected_skill
+	var cells_to_hit : Array[Vector2] = get_skill_aoe_cells(target_cell,skill)
+	
 	Globals.signalBus.skill_selected.emit(null)
 
 	#calculer la distance pour ensuite vérifier la porté
@@ -148,27 +150,26 @@ func _try_cast_skill_player(target_cell: Vector2) -> void:
 	#s'il peu allor il paie
 	_player.pay_cost_skill(skill)
 	
+	##on parcourt chaque case à frapper
+	for cell in cells_to_hit:
+		var target_unit : Unit = _units.get(cell)
+		if target_unit == _player and  skill.type == SkillsData.Skill_type.DAMAGE:
+			continue
 
-	match skill.type:
-		SkillsData.Skill_type.DAMAGE:
-			var command = AttackCommand.new(_player,_units.get(target_cell), skill)
-			await execute_command(command)
-			turn_manager.on_player_action_done()
-		SkillsData.Skill_type.HEAL:
-			var command = HealCommand.new(_player,_units.get(target_cell),skill)
-			await execute_command(command)
-			turn_manager.on_player_action_done()
-		SkillsData.Skill_type.BUFF:
-			print("buff de sort lancé")
-			var target_unit: Unit
-			
-			if skill.target_self:
-				target_unit = _player
-			else:
-				target_unit = _units.get(target_cell)
-			var command = BuffCommand.new(_player, target_unit, skill)
-			await execute_command(command)
-			turn_manager.on_player_action_done()
+		match skill.type:
+			SkillsData.Skill_type.DAMAGE:
+				var command = AttackCommand.new(_player,target_unit, skill)
+				await execute_command(command)
+		
+			SkillsData.Skill_type.HEAL:
+				var command = HealCommand.new(_player,target_unit,skill)
+				await execute_command(command)
+				
+			SkillsData.Skill_type.BUFF:
+				var command = BuffCommand.new(_player, target_unit, skill)
+				await execute_command(command)
+
+	turn_manager.on_player_action_done()
 		
 ##fonction pour retourner un chemin pour l'ennemis
 func get_path_to_player(unit: Unit, target_cell) -> PackedVector2Array:
@@ -214,24 +215,34 @@ func _on_cursor_moved(new_cell: Vector2) -> void:
 	if turn_manager.is_player_turn():
 		
 
-		if selected_skill != null:
-			match selected_skill.aoe_shape:
-				SkillsData.AOE_Shape.CIRCLE:
-					var circle_cells = grid.get_cells_in_circle(new_cell, selected_skill.aoe_size)
-					unit_overlay.draw_impact(circle_cells)
-				SkillsData.AOE_Shape.CROSS:
-					var cross_cells = grid.get_cells_in_cross(new_cell, selected_skill.aoe_size)
-					unit_overlay.draw_impact(cross_cells)
-				SkillsData.AOE_Shape.SQUARE:
-					var square_cells = grid.get_cells_in_square(new_cell, selected_skill.aoe_size)
-					unit_overlay.draw_impact(square_cells)
-				SkillsData.AOE_Shape.POINT:
-					if skill_cells_range.has(new_cell):
-						unit_overlay.draw_impact([new_cell])
+		if selected_skill != null and skill_cells_range.has(new_cell):
+			unit_path.visible = false
+			unit_overlay.draw_impact(get_skill_aoe_cells(new_cell, selected_skill))
 		else:
+			unit_overlay.clear_impact()
+			unit_path.visible = true
 			unit_path.draw_path(_player.cell,new_cell, _player.move_range)
 
 
+
+##function pour avoir toutes les cases sur lequel appliqué les dégats
+func get_skill_aoe_cells(center_cell: Vector2, skill: SkillsData) -> Array[Vector2]:
+
+	var skill_cells : Array[Vector2] = [center_cell]
+	match skill.aoe_shape:
+		SkillsData.AOE_Shape.CIRCLE:
+			skill_cells = grid.get_cells_in_circle(center_cell, skill.aoe_size)
+		SkillsData.AOE_Shape.CROSS:
+			skill_cells = grid.get_cells_in_cross(center_cell, skill.aoe_size)
+		SkillsData.AOE_Shape.SQUARE:
+			skill_cells = grid.get_cells_in_square(center_cell, skill.aoe_size)
+		SkillsData.AOE_Shape.POINT:
+			if skill_cells_range.has(center_cell):
+				skill_cells = [center_cell]
+	
+	#je dois filtrer les murs
+	skill_cells = environment_level.get_valid_skills_cells(skill_cells)
+	return skill_cells
 
 
 func _on_turn_manager_player_turned() -> void:
@@ -257,6 +268,7 @@ func _on_skill_selected(skill: SkillsData) -> void:
 		return
 	unit_overlay.move_layer.visible = false
 	skill_cells_range = grid.get_cells_in_circle(_player.cell, skill.max_range)
+	skill_cells_range = environment_level.get_valid_skills_cells(skill_cells_range)
 	unit_overlay.draw_range(skill_cells_range)
 	print("Un nouveau sort à été choisi", skill.skill_name)
 	selected_skill = skill

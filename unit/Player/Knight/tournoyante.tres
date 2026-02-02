@@ -1,11 +1,15 @@
 [gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://ntast6edt2gh"]
 
-[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="1_183d3"]
-[ext_resource type="Texture2D" uid="uid://dlb54bvnwn3b8" path="res://asset/ui/skills/tournoyante_icon.tres" id="1_vrcux"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://Unit/ressourses/skills/skills_data.gd" id="1_183d3"]
+[ext_resource type="Texture2D" uid="uid://cubih5gn0vdsc" path="res://Unit/Player/Knight/skill_icons/skill_icons39.png" id="1_yeea1"]
 
 [resource]
 script = ExtResource("1_183d3")
 skill_name = "tournoyante"
 description = "une attaque qui tourne sur elle meme"
-icon = ExtResource("1_vrcux")
+icon = ExtResource("1_yeea1")
+min_range = 0
+max_range = 0
+aoe_shape = 3
+aoe_size = 1
 metadata/_custom_type_script = "uid://banba74pyncs0"

@@ -1,13 +1,13 @@
 [gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://bk7obnulfcvk6"]
 
-[ext_resource type="Texture2D" uid="uid://bo3tnb8f3rnuj" path="res://asset/ui/skills/fracas_icon.tres" id="1_wl8kd"]
-[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="2_vuvs1"]
+[ext_resource type="Texture2D" uid="uid://xonrxlap63nx" path="res://Unit/Player/Knight/skill_icons/skill_icons17.png" id="1_by3ts"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://Unit/ressourses/skills/skills_data.gd" id="2_vuvs1"]
 
 [resource]
 script = ExtResource("2_vuvs1")
 skill_name = "Fracas"
 description = "A blow struck with the point of the sword to pierce."
-icon = ExtResource("1_wl8kd")
+icon = ExtResource("1_by3ts")
 stamina_cost = 2
 amount = 4
 metadata/_custom_type_script = "uid://banba74pyncs0"

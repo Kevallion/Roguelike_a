@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cp4jrwqcmtgr7"]
 
-[ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://unit/unit.tscn" id="1_bfvk7"]
-[ext_resource type="Script" uid="uid://dcno2cigla0l2" path="res://unit/Player/player.gd" id="2_aph0k"]
-[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="3_8fa5x"]
-[ext_resource type="Resource" uid="uid://ntast6edt2gh" path="res://unit/Player/Knight/tournoyante.tres" id="4_dagme"]
-[ext_resource type="Resource" uid="uid://clcnhf6a82m35" path="res://unit/Player/knight_stats.tres" id="5_j1nbm"]
-[ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/stats_components.gd" id="5_ur2e0"]
-[ext_resource type="Resource" uid="uid://bk7obnulfcvk6" path="res://unit/Player/Knight/fracas.tres" id="5_vo2wx"]
-[ext_resource type="Resource" uid="uid://ni2yw6xq71km" path="res://unit/Player/Knight/divine_force.tres" id="6_xs7vv"]
+[ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://Unit/unit.tscn" id="1_bfvk7"]
+[ext_resource type="Script" uid="uid://dcno2cigla0l2" path="res://Unit/Player/player.gd" id="2_aph0k"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://Unit/ressourses/skills/skills_data.gd" id="3_8fa5x"]
+[ext_resource type="Resource" uid="uid://ntast6edt2gh" path="res://Unit/Player/Knight/tournoyante.tres" id="4_dagme"]
+[ext_resource type="Resource" uid="uid://clcnhf6a82m35" path="res://Unit/Player/knight_stats.tres" id="5_j1nbm"]
+[ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://Unit/stats_components.gd" id="5_ur2e0"]
+[ext_resource type="Resource" uid="uid://bk7obnulfcvk6" path="res://Unit/Player/Knight/fracas.tres" id="5_vo2wx"]
+[ext_resource type="Resource" uid="uid://ni2yw6xq71km" path="res://Unit/Player/Knight/divine_force.tres" id="6_xs7vv"]
 [ext_resource type="Texture2D" uid="uid://doidi02kfdjv8" path="res://asset/Heroes/knight/S_Walk.png" id="7_dagme"]
 [ext_resource type="Texture2D" uid="uid://c3myb0v5snv84" path="res://asset/Heroes/knight/S_Idle.png" id="7_vo2wx"]
 
@@ -96,7 +96,7 @@ animations = [{
 
 [node name="Player" unique_id=961419667 instance=ExtResource("1_bfvk7")]
 script = ExtResource("2_aph0k")
-skills = Array[ExtResource("3_8fa5x")]([ExtResource("4_dagme"), ExtResource("5_vo2wx"), ExtResource("6_xs7vv")])
+skills = Array[ExtResource("3_8fa5x")]([ExtResource("5_vo2wx"), ExtResource("4_dagme"), ExtResource("6_xs7vv")])
 
 [node name="UnitVisual" parent="." index="0" node_paths=PackedStringArray("_anim", "_visual", "_unit")]
 _anim = NodePath("AnimatedSprite2D")

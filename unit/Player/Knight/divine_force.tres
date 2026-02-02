@@ -1,15 +1,16 @@
 [gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://ni2yw6xq71km"]
 
-[ext_resource type="Texture2D" uid="uid://rkd3ehgmcm2d" path="res://asset/ui/skills/force_divin_icon.tres" id="1_wuj6g"]
-[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="2_ib4xc"]
+[ext_resource type="Texture2D" uid="uid://duekptqja7205" path="res://Unit/Player/Knight/skill_icons/skill_icons41.png" id="1_qcd71"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://Unit/ressourses/skills/skills_data.gd" id="2_ib4xc"]
 
 [resource]
 script = ExtResource("2_ib4xc")
 skill_name = "force_divine"
 description = "Realod Stamina"
-icon = ExtResource("1_wuj6g")
+icon = ExtResource("1_qcd71")
 stamina_cost = 2
 min_range = 0
+max_range = 0
 amount = 7
 type = 2
 affect = 5

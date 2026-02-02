@@ -6,6 +6,7 @@
 script = ExtResource("1_hhnh2")
 entity_name = "rat"
 point_health = 2
-point_attack = 2
+point_defense = 2
+point_attack = 6
 point_move_range = 1
 metadata/_custom_type_script = "uid://dtcbnvw07ca12"

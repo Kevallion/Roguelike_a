@@ -46,7 +46,7 @@ func get_reachble_cells_around(cell: Vector2, max_distance: int, units: Dictiona
 		#on parcours chaque voisin afin de savoir on doit l'ajouter
 		for direction in DIRECTIONS:
 			var cell_neighboor = current + direction
-			#s'il est occupé on l'ajoute pas
+			#s'il est occupé  par une autre unité on ne l'ajoute pas
 			if is_occupied(cell_neighboor,units):
 				continue
 			if cell_neighboor in array:
@@ -66,3 +66,14 @@ func is_cell_walkable(cell: Vector2) -> bool:
 	if tile_map_walls.get_cell_source_id(cell) != -1:
 			return false
 	return true
+
+##function pour filtrer sir le sort peu etre lancé sur cette célule
+##Si sur une célule il y un élément d'environement ce sera pas possible
+func get_valid_skills_cells(cells: Array[Vector2] ) -> Array[Vector2]:
+	var valid_cells : Array[Vector2] = []
+
+	for cell in cells:
+		if is_cell_walkable(cell):
+			valid_cells.append(cell)
+	
+	return valid_cells
