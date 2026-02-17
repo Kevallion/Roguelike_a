@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_hhnh2")
 entity_name = "rat"
-point_health = 2
+point_health = 1
 point_defense = 2
 point_attack = 6
 point_move_range = 1

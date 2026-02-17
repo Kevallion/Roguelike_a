@@ -46,10 +46,6 @@ func set_is_walking(new_value) -> void:
 	set_process(is_walking)
 
 func _ready() -> void:
-	
-	if Engine.is_editor_hint():
-		return
-
 	#on récupère la coordonnée d'ou est sensé être placé notre entité puis on le replace bien après
 	cell = grid.calculate_grid_coordinate(position)
 	position = grid.calculate_map_position(cell)

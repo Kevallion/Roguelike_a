@@ -76,6 +76,7 @@ func get_nearest_walkable_cell(new_cell: Vector2, walkable_cells: Array) -> Vect
 			
 	return nearest_cell
 
+##renvoie la cellulé marchable la plus éploigné possible
 func get_farthest_walkable_cell(new_cell: Vector2, walkable_cells: Array) -> Vector2:
 	var farthest_cell: Vector2
 	var max_distance = 0
@@ -106,6 +107,7 @@ func get_neareast_cells_around_a_target(start_cell: Vector2, target_cell: Vector
 	
 	return nearest_cell
 
+##permet à partir d'un point d'obtenir la forme d'une croix
 func get_cells_in_cross(center: Vector2, size: int) -> Array[Vector2]:
 	var cells : Array[Vector2]= []
 	for i in range(1, size + 1):
@@ -116,6 +118,7 @@ func get_cells_in_cross(center: Vector2, size: int) -> Array[Vector2]:
 				cells.append(neighbor_cell)
 	return cells
 
+##permet à partir d'un point d'obtenir la forme d'un carré
 func get_cells_in_square(center: Vector2, size: int) -> Array[Vector2]:
 	var cells : Array[Vector2]= []
 	for row in range(-size, size + 1):
@@ -126,6 +129,7 @@ func get_cells_in_square(center: Vector2, size: int) -> Array[Vector2]:
 				cells.append(neighbor_cell)
 	return cells
 
+##permet à partir d'un point d'obtenir la forme d'un cercle
 func get_cells_in_circle(center: Vector2, size: int) -> Array[Vector2]:
 	var cells : Array[Vector2]= []
 	var square_cells : Array[Vector2] = get_cells_in_square(center, size)

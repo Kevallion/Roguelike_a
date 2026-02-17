@@ -11,7 +11,3 @@ texture = ExtResource("2_8eho3")
 region_enabled = true
 region_rect = Rect2(0, 80, 16, 16)
 region_filter_clip_enabled = true
-
-[node name="Timer" type="Timer" parent="." unique_id=285297003]
-unique_name_in_owner = true
-one_shot = true

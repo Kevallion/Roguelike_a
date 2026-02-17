@@ -2,10 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://bumk3bob8i4b" path="res://unit/unit.tscn" id="1_kg1yc"]
 [ext_resource type="Script" uid="uid://cf2hrg4soplf2" path="res://unit/Enemy/enemy.gd" id="2_ois23"]
+[ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="3_cx3h7"]
 [ext_resource type="Texture2D" uid="uid://dhncfax7ow8vy" path="res://asset/Enemies/rat/S_Idle.png" id="4_3pu5m"]
+[ext_resource type="Resource" uid="uid://cdx1me2dkm4sy" path="res://unit/Enemy/rat/skills/bit.tres" id="4_bjpfn"]
 [ext_resource type="Script" uid="uid://bbw78k48274p5" path="res://unit/stats_components.gd" id="4_yt3h8"]
 [ext_resource type="Resource" uid="uid://bvroam8k7cv50" path="res://unit/Enemy/rat/rat_stats.tres" id="5_2xr4q"]
 [ext_resource type="Texture2D" uid="uid://dtmun8nlv43x6" path="res://asset/Enemies/rat/S_Walk.png" id="5_bwtsc"]
+[ext_resource type="Script" uid="uid://bxn37ixrwmdew" path="res://unit/Enemy/ai/ai_brain.gd" id="7_bih3l"]
+[ext_resource type="Script" uid="uid://pj2cbpf17ip" path="res://unit/Enemy/ai/ai_consideration.gd" id="8_6m5w7"]
+[ext_resource type="Resource" uid="uid://cctg6kd75culg" path="res://unit/Enemy/ai/move_considerations/move_selfHealth.tres" id="11_3x263"]
+[ext_resource type="Resource" uid="uid://b8iv0o3406tih" path="res://unit/Enemy/ai/move_considerations/move_distance.tres" id="12_0lnuk"]
+[ext_resource type="Resource" uid="uid://d1vsn707b356p" path="res://unit/Enemy/ai/move_considerations/move_otherHealth.tres" id="13_csam4"]
+[ext_resource type="Resource" uid="uid://b20tsaj5ec6nc" path="res://unit/Enemy/ai/flee_considerations/flee_move.tres" id="14_1tui0"]
+[ext_resource type="Resource" uid="uid://de0rtntfqybdg" path="res://unit/Enemy/ai/flee_considerations/flee_OtherHealth.tres" id="15_f8bfp"]
+[ext_resource type="Resource" uid="uid://7kyhxswva6r7" path="res://unit/Enemy/ai/flee_considerations/flee_SelfHealth.tres" id="16_om17y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bih3l"]
 atlas = ExtResource("4_3pu5m")
@@ -90,9 +100,11 @@ animations = [{
 "speed": 8.0
 }]
 
-[node name="Enemy" unique_id=654636031 instance=ExtResource("1_kg1yc")]
+[node name="Enemy" unique_id=654636031 node_paths=PackedStringArray("ai_brain") instance=ExtResource("1_kg1yc")]
 script = ExtResource("2_ois23")
 view_range = 90.0
+ai_brain = NodePath("AiBrain")
+skills = Array[ExtResource("3_cx3h7")]([ExtResource("4_bjpfn")])
 
 [node name="UnitVisual" parent="." index="0" node_paths=PackedStringArray("_anim", "_visual", "_unit")]
 position = Vector2(0, 1)
@@ -113,6 +125,12 @@ metadata/_custom_type_script = "uid://bbw78k48274p5"
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." index="2" unique_id=1455591126]
 show_rect = false
+
+[node name="AiBrain" type="Node" parent="." index="3" unique_id=625190101]
+script = ExtResource("7_bih3l")
+move_considerations = Array[ExtResource("8_6m5w7")]([ExtResource("11_3x263"), ExtResource("12_0lnuk"), ExtResource("13_csam4")])
+flee_considerations = Array[ExtResource("8_6m5w7")]([ExtResource("14_1tui0"), ExtResource("15_f8bfp"), ExtResource("16_om17y")])
+metadata/_custom_type_script = "uid://bxn37ixrwmdew"
 
 [connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

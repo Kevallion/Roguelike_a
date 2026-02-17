@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ConSelfHealth" format=3 uid="uid://bpnu0nkxmary5"]
+
+[ext_resource type="Script" uid="uid://bhoweyvoh2x1k" path="res://unit/Enemy/ai/con_selfHealth.gd" id="1_626yg"]
+
+[sub_resource type="Curve" id="Curve_626yg"]
+_data = [Vector2(0.27941176, 0.0013597012), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.9573861, 0.0, 0, 0]
+point_count = 2
+
+[resource]
+script = ExtResource("1_626yg")
+response_curve = SubResource("Curve_626yg")
+metadata/_custom_type_script = "uid://bhoweyvoh2x1k"

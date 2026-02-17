@@ -35,6 +35,7 @@ enum AOE_Shape {POINT, CROSS, CIRCLE, SQUARE}
 @export var affect : Stat_affect
 @export_range(0.0,4.0,1.0) var turn_duration : int = 1
 @export var target_self: bool = false
+@export var considerations: Array[AiConsideration]
 
 @export_category("Area of Effect")
 @export var aoe_shape: AOE_Shape = AOE_Shape.POINT

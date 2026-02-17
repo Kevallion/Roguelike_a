@@ -1,10 +1,14 @@
 [gd_resource type="Resource" script_class="SkillsData" format=3 uid="uid://cdx1me2dkm4sy"]
 
 [ext_resource type="Script" uid="uid://banba74pyncs0" path="res://unit/ressourses/skills/skills_data.gd" id="1_3q00o"]
+[ext_resource type="Script" uid="uid://pj2cbpf17ip" path="res://unit/Enemy/ai/ai_consideration.gd" id="1_dr553"]
+[ext_resource type="Resource" uid="uid://ojwaa8gniu3e" path="res://unit/Enemy/ai/attack_range_melee.tres" id="2_lt6gk"]
+[ext_resource type="Resource" uid="uid://bpnu0nkxmary5" path="res://unit/Enemy/ai/attack_confidence.tres" id="3_uvxnc"]
 
 [resource]
 script = ExtResource("1_3q00o")
 skill_name = "bit"
 description = "Il mord le joueur"
 turn_duration = 0
+considerations = Array[ExtResource("1_dr553")]([ExtResource("2_lt6gk"), ExtResource("3_uvxnc")])
 metadata/_custom_type_script = "uid://banba74pyncs0"

@@ -16,6 +16,7 @@ func _init(_unit: Unit, _path: PackedVector2Array, _board: GameBoard = null) -> 
 func execute() -> void:
 	#mettre à jour la position de l'unité sur le plateau
 	if board and board.has_method("update_unit_position"):
+		print(path)
 		board.update_unit_position(unit,path[-1])
 	
 	unit.is_onAction = true

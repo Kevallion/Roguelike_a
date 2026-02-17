@@ -28,6 +28,10 @@ class_name GameBoard extends Node2D
 ##propriété qui va contenir chaque entité présente présente l'étage en cours
 var _units := {}
 
+#représente les objet, pièges, pièces, porte pnj ect
+var _objects : Dictionary[Vector2 ,InteractiveObject] = {}
+
+
 ##les célules sur lesquelles on peut marcher
 var _walkable_cells := []
 
@@ -49,6 +53,11 @@ func reinitialize() -> void:
 	_player = null 
 	
 	for child in get_children():
+		
+		if child is InteractiveObject:
+			print("objet ajouté")
+			_objects[child.cell] = child
+		
 		var unit = child as Unit
 		if not unit:
 			continue
@@ -57,12 +66,12 @@ func reinitialize() -> void:
 		
 		if unit is Player:
 			_player = unit
-	
+			
 	for unit in _units.values():
 		if unit is Enemy:
 			var enemy  = unit as Enemy
 			enemy._player = _player
-		
+			enemy.initialize(self)
 			
 			
 	#on fait connaitre au turn_manager les unités qui doivent jouer		
@@ -207,6 +216,10 @@ func _on_cursor_accept_pressed(cell: Vector2) -> void:
 	else:
 		if unit_at_cell is Enemy:
 			_try_attack_player(unit_at_cell)
+		elif _objects.has(cell) and _objects[cell].can_interact(_player.cell):
+			var objet = _objects[cell]
+			objet.interact(_player)
+			turn_manager.on_player_action_done()
 		elif not _units.has(cell):
 			_try_move_player(cell)
 
@@ -257,6 +270,7 @@ func _on_turn_manager_player_turn_finished() -> void:
 	unit_overlay.clear()
 	unit_path.stop()
 
+##fonction connecté à un signal pour savoir qu'un un skill est selectioné
 func _on_skill_selected(skill: SkillsData) -> void:
 	if skill  == null:
 		selected_skill = null

@@ -8,10 +8,6 @@ signal moved(new_cell: Vector2)
 
 @export var grid : Grid = preload("res://Utils/Grid.tres")
 
-##temps necéssaire avant de pouvoir bouger le cursor de nouveau
-@export var cursor_move_cooldown := 0.1
-@onready var timer: Timer = %Timer
-
 var cell := Vector2.ZERO : set = set_cell
 
 func set_cell(new_value) -> void:
@@ -19,14 +15,13 @@ func set_cell(new_value) -> void:
 	if new_cell.is_equal_approx(cell):
 		return
 	cell = new_cell
-	position = grid.calculate_map_position(cell)
+	global_position = grid.calculate_map_position(cell)
 	moved.emit(cell)
-	timer.start()
+
 	
 	
 func _ready() -> void:
-	timer.wait_time = cursor_move_cooldown
-	position = grid.calculate_map_position(cell)
+	global_position = grid.calculate_map_position(cell)
 
 func _unhandled_input(event: InputEvent) -> void:
 	#si la souris bouge on calcule sa nouvelle position en priorité

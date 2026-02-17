@@ -1,3 +1,4 @@
+##class de base pour crée une considération.
 class_name AiConsideration extends Resource
 
 ## C'est ici que tu dessineras ta courbe dans l'éditeur (le "Traducteur") 

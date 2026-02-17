@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://b3vipm4ybv7of" path="res://UI/skil_bar.gd" id="2_2pltu"]
 [ext_resource type="PackedScene" uid="uid://bxfr2hy61foef" path="res://asset/Environment/world_environment.tscn" id="2_ykeeq"]
 [ext_resource type="PackedScene" uid="uid://dbkrdivn3awpo" path="res://UI/skill_button.tscn" id="3_dugkq"]
+[ext_resource type="Script" uid="uid://cs6ujw6ssf4js" path="res://level_loader.gd" id="5_drpm8"]
 
 [node name="MainGame" type="Node2D" unique_id=582875553]
 
@@ -59,5 +60,7 @@ offset_bottom = 40.0
 [node name="WorldEnvironment" parent="." unique_id=1914867463 instance=ExtResource("2_ykeeq")]
 
 [node name="LevelLoader" type="Node2D" parent="." unique_id=1422187040]
+script = ExtResource("5_drpm8")
+level_to_load = ExtResource("1_1oj5k")
 
 [node name="Level_01" parent="LevelLoader" unique_id=1486667070 instance=ExtResource("1_1oj5k")]

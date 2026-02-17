@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bjudiy0fmlxqe"]
+
+[ext_resource type="Texture2D" uid="uid://c16tldnsps27" path="res://environment/objects/tilemaps/Objects.png" id="1_8o6it"]
+[ext_resource type="Script" uid="uid://cg51k8kurexs7" path="res://environment/objects/up_level.gd" id="1_uocms"]
+
+[node name="up_level" type="Node2D" unique_id=476911181]
+script = ExtResource("1_uocms")
+interaction_range = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1686165346]
+texture = ExtResource("1_8o6it")
+region_enabled = true
+region_rect = Rect2(137, 58.537758, 15, 18.462242)

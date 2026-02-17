@@ -7,7 +7,6 @@ class_name Scene_Changer extends CanvasLayer
 
 var new_scene_path := ""
 
-
 func change_scene_to(new_scene: String) -> void:
 	print("chagne_scene_to", new_scene)
 	new_scene_path = new_scene
@@ -16,7 +15,12 @@ func change_scene_to(new_scene: String) -> void:
 		$AnimationPlayer.stop()
 	$AnimationPlayer.play("fade in out")
 	
+func play_transition() -> void:
+	if $AnimationPlayer.is_playing():
+		$AnimationPlayer.stop()
+	$AnimationPlayer.play("fade in out_level")
 	
+	await $AnimationPlayer.animation_finished
 	
 func _new_scene():
 	var result = get_tree().change_scene_to_file(new_scene_path)
